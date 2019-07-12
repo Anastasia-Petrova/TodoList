@@ -74,7 +74,11 @@
                                     <action selector="addItem:" destination="HDd-ha-UTb" id="gna-yA-fOb"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem title="Delete" id="Jl9-Ra-avN"/>
+                            <barButtonItem title="Delete" id="Jl9-Ra-avN">
+                                <connections>
+                                    <action selector="deleteFewItems:" destination="HDd-ha-UTb" id="j1j-MZ-z7J"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                 </tableViewController>

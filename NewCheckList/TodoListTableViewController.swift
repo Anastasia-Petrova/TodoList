@@ -11,6 +11,12 @@ import CoreData
 
 class TodoListTableViewController: UITableViewController {
     
+    @IBAction func deleteFewItems(_ sender: UIBarButtonItem) {
+        if let selectedRows = tableView.indexPathsForSelectedRows {
+            delete(items: selectedRows)
+        }
+    }
+    
     @IBAction func addItem(_ sender: UIBarButtonItem) {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let aivc = storyboard.instantiateViewController(withIdentifier: "AddItemTableViewController") as! AddItemTableViewController
@@ -28,6 +34,7 @@ class TodoListTableViewController: UITableViewController {
         performFetch()
         todoListFetchController.delegate = self
         navigationItem.leftBarButtonItem = editButtonItem
+        tableView.allowsMultipleSelectionDuringEditing = true
     }
     
     public func performFetch() {
@@ -105,6 +112,13 @@ class TodoListTableViewController: UITableViewController {
     func deleteItem(indexPath: IndexPath) {
         let item = todoListFetchController.object(at: indexPath)
         CoreDataManager.instance.managedObjectContext.delete(item)
+        CoreDataManager.instance.saveContext()
+    }
+    
+    func delete(items indexPaths: [IndexPath]) {
+        indexPaths
+        .map(todoListFetchController.object)
+        .forEach(CoreDataManager.instance.managedObjectContext.delete)
         CoreDataManager.instance.saveContext()
     }
 }

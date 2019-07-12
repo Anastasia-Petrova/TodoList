@@ -71,6 +71,10 @@ class TodoListTableViewController: UITableViewController {
         let item = todoListFetchController.object(at: indexPath)
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath) as! TodoItemTableViewCell
         cell.itemTextField.text = item.name
+        cell.editItemCallback = { newString in
+            item.name = newString
+            CoreDataManager.instance.saveContext()
+        }
         return cell
     }
     

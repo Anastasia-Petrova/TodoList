@@ -1,6 +1,8 @@
 import UIKit
 
 class TodoItemTableViewCell: UITableViewCell {
+    typealias EditItemCallback = (String?) -> Void
+    var editItemCallback: EditItemCallback?
 
     @IBOutlet weak var checkMark: UIButton!
     
@@ -29,6 +31,7 @@ class TodoItemTableViewCell: UITableViewCell {
 extension TodoItemTableViewCell: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        editItemCallback?(textField.text)
         return false
     }
     

@@ -53,6 +53,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="checkMark" destination="Dno-N3-huD" id="V29-be-P7s"/>
                                     <outlet property="itemTextField" destination="uZd-rJ-Wcf" id="uA6-Xq-wOb"/>
                                 </connections>
                             </tableViewCell>

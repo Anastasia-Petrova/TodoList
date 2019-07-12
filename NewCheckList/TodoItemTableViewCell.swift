@@ -10,11 +10,16 @@ import UIKit
 
 class TodoItemTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var checkMark: UIButton!
     
     @IBOutlet weak var itemTextField: UITextField!
     
     @IBAction func checkItem(_ sender: Any) {
-        
+        if checkMark.image(for: .normal) == UIImage(named: "uncheckedMark") {
+            checkMark.setImage(UIImage(named: "checkedMark") , for: .normal)
+        } else {
+            checkMark.setImage(UIImage(named: "uncheckedMark") , for: .normal)
+        }
     }
     
     override func awakeFromNib() {

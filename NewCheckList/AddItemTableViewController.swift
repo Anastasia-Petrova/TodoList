@@ -10,7 +10,6 @@ import UIKit
 
 class AddItemTableViewController: UITableViewController {
     typealias AddItemCallback = (String) -> Void
-    typealias EditItemCallback = (String) -> Void
     @IBOutlet weak var textField: UITextField!
     var editingItemName = ""
     
@@ -28,8 +27,6 @@ class AddItemTableViewController: UITableViewController {
     @IBOutlet weak var doneButton: UIBarButtonItem!
     
     var addItemCallback: AddItemCallback?
-    var editItemCallback: EditItemCallback?
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()

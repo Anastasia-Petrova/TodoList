@@ -56,23 +56,9 @@ class TodoListTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = todoListFetchController.object(at: indexPath)
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath) as! TodoItemTableViewCell
-        cell.todoLabel.text = item.name
-        cell.checkmark.text = ""
+        cell.itemTextField.text = item.name
+//        cell.checkmark.text = ""
         return cell
-    }
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        //         if segue.identifier == "EditItemSegue" {
-        if let aivc = segue.destination as? AddItemTableViewController {
-            if let cell = sender as? UITableViewCell,
-                let indexPath = tableView.indexPath(for: cell) {
-                let item = todoListFetchController.object(at: indexPath)
-                if let newEditingItemName = item.name {
-                    aivc.editingItemName = newEditingItemName
-                }
-                //                    addItemDetailViewController.itemToEdit = item
-                //                    addItemDetailViewController.delegate = self
-            }
-        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -80,11 +66,11 @@ class TodoListTableViewController: UITableViewController {
             return
         }
         let cell = tableView.cellForRow(at: indexPath) as! TodoItemTableViewCell
-        if cell.checkmark.text == "" {
-            cell.checkmark.text = "√"
-        } else {
-            cell.checkmark.text = ""
-        }
+//        if cell.checkmark.text == "" {
+//            cell.checkmark.text = "√"
+//        } else {
+//            cell.checkmark.text = ""
+//        }
         
         tableView.deselectRow(at: indexPath, animated: true)
     }

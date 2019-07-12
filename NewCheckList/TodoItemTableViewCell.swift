@@ -1,11 +1,3 @@
-//
-//  TodoItemTableViewCell.swift
-//  NewCheckList
-//
-//  Created by Anastasia Petrova on 7/11/19.
-//  Copyright © 2019 Petrova. All rights reserved.
-//
-
 import UIKit
 
 class TodoItemTableViewCell: UITableViewCell {
@@ -30,7 +22,6 @@ class TodoItemTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        // Configure the view for the selected state
     }
 
 }
@@ -47,11 +38,6 @@ extension TodoItemTableViewCell: UITextFieldDelegate {
                 return false
         }
         let newText = oldText.replacingCharacters(in: stringRange, with: string)
-//        if newText.isEmpty {
-//            doneButton.isEnabled = false
-//        } else {
-//            doneButton.isEnabled = true
-//        }
         return true
     }
 }

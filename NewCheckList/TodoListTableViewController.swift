@@ -27,6 +27,7 @@ class TodoListTableViewController: UITableViewController {
         super.viewDidLoad()
         performFetch()
         todoListFetchController.delegate = self
+        navigationItem.leftBarButtonItem = editButtonItem
     }
     
     public func performFetch() {
@@ -35,6 +36,19 @@ class TodoListTableViewController: UITableViewController {
         } catch {
             print(error)
         }
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: true)
+        tableView.setEditing(tableView.isEditing, animated: true)
+    }
+    
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+//            let item = TodoItem(context: CoreDataManager.instance.managedObjectContext)
+//        var items = [item]
+//        items.remove(at: sourceIndexPath.row)
+//        items.insert(item, at: destinationIndexPath.row)
+//        tableView.reloadData()
     }
 
    override func numberOfSections(in tableView: UITableView) -> Int {

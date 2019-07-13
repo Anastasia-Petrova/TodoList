@@ -46,11 +46,16 @@ class TodoListTableViewController: UITableViewController {
         }
         cbc.changeCallback = { change in
             switch change.type {
-            case .insert:
-                self.tableView.insertRows(at: [change.indexPath!], with: .automatic)
-            case .delete: break
-            case .update: break
-            case .move: break
+            case let .insert(indexPath):
+                self.tableView.insertRows(at: [indexPath], with: .automatic)
+            case let .delete(indexPath):
+                self.tableView.deleteRows(at: [indexPath], with: .automatic)
+            case let .update(indexPath):
+                self.tableView.reloadRows(at: [indexPath], with: .automatic)
+            case let .move(fromIndexPath, toIndexPath):
+                self.tableView.moveRow(at: fromIndexPath, to: toIndexPath)
+            case let .error(message):
+                print(message)
             }
         }
     }

@@ -11,7 +11,7 @@ struct TodoItemDataSource {
             //tableView.endUpdate()
         }
         cdc.changeCallback = { change in
-            //tableView.insertItem(
+            
         }
     }
 }
@@ -51,6 +51,15 @@ enum Dog {
     case shiba
 }
 
-let catLeo = Cat(dog: .pug)
-let catPanther = Cat(dog: .shuber)
+struct Human {
+    let name: String
+}
 
+enum Fruit {
+    case apple(Double)
+}
+
+var catLeo = Cat(dog: .pug)
+var catTiger = Cat.tiger
+var catPanther = Cat(dog: .shuber)
+var human = Human(name: "Alex")

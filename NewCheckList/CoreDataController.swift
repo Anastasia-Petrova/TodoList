@@ -2,7 +2,7 @@ import CoreData
 
 public final class CoreDataController<T>: NSObject, NSFetchedResultsControllerDelegate where T: NSFetchRequestResult {
     public typealias UpdateCallback = () -> Void
-    public typealias ChangeCallback = (CoreDataChange) -> Void
+    public typealias ChangeCallback = (Change) -> Void
     
     let fetchResultController: NSFetchedResultsController<T>
     public var beginUpdate: UpdateCallback?
@@ -46,39 +46,45 @@ public final class CoreDataController<T>: NSObject, NSFetchedResultsControllerDe
                            at indexPath: IndexPath?,
                            for type: NSFetchedResultsChangeType,
                            newIndexPath: IndexPath?) {
-        let change = CoreDataChange(
-            indexPath: indexPath,
-            type: CoreDataChange.ChangeType(type: type),
-            newIndexPath: newIndexPath
-        )
+        var changeType: Change.ChangeType = .error("CoreData has fucked up!")
+        
+        switch type {
+        case .insert:
+            if let newIndexPath = newIndexPath {
+                changeType = .insert(newIndexPath)
+            }
+        case .delete:
+            if let indexPath = indexPath {
+                changeType = .delete(indexPath)
+            }
+        case .update:
+            if let indexPath = indexPath {
+                changeType = .update(indexPath)
+            }
+        case .move:
+            if let fromIndexPath = indexPath, let toIndexPath = newIndexPath {
+                changeType = .move(fromIndexPath, toIndexPath)
+            }
+        default: break
+        }
+        let change = Change(type: changeType)
         changeCallback?(change)
     }
 }
 
-public struct CoreDataChange {
-    public enum ChangeType {
-        case insert
-        case delete
-        case move
-        case update
-        
-        fileprivate init (type: NSFetchedResultsChangeType) {
-            switch type {
-            case .insert:
-                self = .insert
-            case .delete:
-                self = .delete
-            case .move:
-                self = .move
-            case .update:
-                self = .update
-            @unknown default:
-                fatalError()
-            }
-        }
+extension CoreDataController {
+    public struct Change {
+        let type: ChangeType
     }
-    
-    let indexPath: IndexPath?
-    let type: ChangeType
-    let newIndexPath: IndexPath?
 }
+
+extension CoreDataController.Change {
+    public enum ChangeType {
+        case insert(IndexPath)
+        case delete(IndexPath)
+        case move(IndexPath, IndexPath)
+        case update(IndexPath)
+        case error(String)
+    }
+}
+

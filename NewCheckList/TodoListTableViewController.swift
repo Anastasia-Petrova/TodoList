@@ -35,6 +35,24 @@ class TodoListTableViewController: UITableViewController {
         todoListFetchController.delegate = self
         navigationItem.leftBarButtonItem = editButtonItem
         tableView.allowsMultipleSelectionDuringEditing = true
+        
+        let cbc = CoreDataController<TodoItem>(entityName: "TodoItem", keyForSort: "name")
+        cbc.fetch()
+        cbc.beginUpdate = {
+            self.tableView.beginUpdates()
+        }
+        cbc.endUpdate = {
+            self.tableView.endUpdates()
+        }
+        cbc.changeCallback = { change in
+            switch change.type {
+            case .insert:
+                self.tableView.insertRows(at: [change.indexPath!], with: .automatic)
+            case .delete: break
+            case .update: break
+            case .move: break
+            }
+        }
     }
     
     public func performFetch() {

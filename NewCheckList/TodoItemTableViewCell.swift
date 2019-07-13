@@ -25,7 +25,6 @@ class TodoItemTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
     }
-
 }
 
 extension TodoItemTableViewCell: UITextFieldDelegate {

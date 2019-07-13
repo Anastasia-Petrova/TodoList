@@ -1,7 +1,13 @@
 import CoreData
 
 public final class CoreDataController<T>: NSObject, NSFetchedResultsControllerDelegate where T: NSFetchRequestResult {
+    public typealias UpdateCallback = () -> Void
+    public typealias ChangeCallback = (CoreDataChange) -> Void
+    
     let fetchResultController: NSFetchedResultsController<T>
+    public var beginUpdate: UpdateCallback?
+    public var endUpdate: UpdateCallback?
+    public var changeCallback: ChangeCallback?
     
     public init(entityName: String,
                 keyForSort: String,
@@ -28,9 +34,11 @@ public final class CoreDataController<T>: NSObject, NSFetchedResultsControllerDe
     }
     
     public func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        beginUpdate?()
     }
     
     public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        endUpdate?()
     }
     
     public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
@@ -38,22 +46,39 @@ public final class CoreDataController<T>: NSObject, NSFetchedResultsControllerDe
                            at indexPath: IndexPath?,
                            for type: NSFetchedResultsChangeType,
                            newIndexPath: IndexPath?) {
-        switch type {
-        case .insert:
-            if let newIndexPath = newIndexPath {
-                
-            }
-        case .delete:
-            if let indexPath = indexPath {
-                
-            }
-        case .update: break
-            
-        default: break
-            
-        }
+        let change = CoreDataChange(
+            indexPath: indexPath,
+            type: CoreDataChange.ChangeType(type: type),
+            newIndexPath: newIndexPath
+        )
+        changeCallback?(change)
     }
 }
 
-
-
+public struct CoreDataChange {
+    public enum ChangeType {
+        case insert
+        case delete
+        case move
+        case update
+        
+        fileprivate init (type: NSFetchedResultsChangeType) {
+            switch type {
+            case .insert:
+                self = .insert
+            case .delete:
+                self = .delete
+            case .move:
+                self = .move
+            case .update:
+                self = .update
+            @unknown default:
+                fatalError()
+            }
+        }
+    }
+    
+    let indexPath: IndexPath?
+    let type: ChangeType
+    let newIndexPath: IndexPath?
+}

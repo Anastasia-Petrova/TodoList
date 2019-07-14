@@ -36,28 +36,28 @@ class TodoListTableViewController: UITableViewController {
         navigationItem.leftBarButtonItem = editButtonItem
         tableView.allowsMultipleSelectionDuringEditing = true
         
-        let cbc = CoreDataController<TodoItem>(entityName: "TodoItem", keyForSort: "name")
-        cbc.fetch()
-        cbc.beginUpdate = {
-            self.tableView.beginUpdates()
-        }
-        cbc.endUpdate = {
-            self.tableView.endUpdates()
-        }
-        cbc.changeCallback = { change in
-            switch change.type {
-            case let .insert(indexPath):
-                self.tableView.insertRows(at: [indexPath], with: .automatic)
-            case let .delete(indexPath):
-                self.tableView.deleteRows(at: [indexPath], with: .automatic)
-            case let .update(indexPath):
-                self.tableView.reloadRows(at: [indexPath], with: .automatic)
-            case let .move(fromIndexPath, toIndexPath):
-                self.tableView.moveRow(at: fromIndexPath, to: toIndexPath)
-            case let .error(message):
-                print(message)
-            }
-        }
+//        let cbc = CoreDataController<TodoItem>(entityName: "TodoItem", keyForSort: "name")
+//        cbc.fetch()
+//        cbc.beginUpdate = {
+//            self.tableView.beginUpdates()
+//        }
+//        cbc.endUpdate = {
+//            self.tableView.endUpdates()
+//        }
+//        cbc.changeCallback = { change in
+//            switch change.type {
+//            case let .insert(indexPath):
+//                self.tableView.insertRows(at: [indexPath], with: .automatic)
+//            case let .delete(indexPath):
+//                self.tableView.deleteRows(at: [indexPath], with: .automatic)
+//            case let .update(indexPath):
+//                self.tableView.reloadRows(at: [indexPath], with: .automatic)
+//            case let .move(fromIndexPath, toIndexPath):
+//                self.tableView.moveRow(at: fromIndexPath, to: toIndexPath)
+//            case let .error(message):
+//                print(message)
+//            }
+//        }
     }
     
     public func performFetch() {

@@ -1,18 +1,18 @@
 struct TodoItemDataSource {
     init() {
-        let cdc = CoreDataController<TodoItem>(
-            entityName: "TodoItem",
-            keyForSort: "name"
-        )
-        cdc.beginUpdate = {
-            //tableView.beginUpdate()
-        }
-        cdc.endUpdate = {
-            //tableView.endUpdate()
-        }
-        cdc.changeCallback = { change in
-            
-        }
+//        let cdc = CoreDataController<TodoItem>(
+//            entityName: "TodoItem",
+//            keyForSort: "name"
+//        )
+//        cdc.beginUpdate = {
+//            //tableView.beginUpdate()
+//        }
+//        cdc.endUpdate = {
+//            //tableView.endUpdate()
+//        }
+//        cdc.changeCallback = { change in
+//
+//        }
     }
 }
 

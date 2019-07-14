@@ -1,6 +1,6 @@
 import CoreData
 
-protocol CoreDataMappable {
+public protocol CoreDataMappable {
     associatedtype CoreDataModel: NSFetchRequestResult
     
     init(model: CoreDataModel)

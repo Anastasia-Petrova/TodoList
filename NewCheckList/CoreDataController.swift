@@ -1,10 +1,10 @@
 import CoreData
 
-public final class CoreDataController<T>: NSObject, NSFetchedResultsControllerDelegate where T: NSFetchRequestResult {
+public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedResultsControllerDelegate where ViewModel: CoreDataMappable, ViewModel.CoreDataModel == DBModel {
     public typealias UpdateCallback = () -> Void
     public typealias ChangeCallback = (Change) -> Void
     
-    let fetchResultController: NSFetchedResultsController<T>
+    let fetchResultController: NSFetchedResultsController<DBModel>
     public var beginUpdate: UpdateCallback?
     public var endUpdate: UpdateCallback?
     public var changeCallback: ChangeCallback?
@@ -12,11 +12,11 @@ public final class CoreDataController<T>: NSObject, NSFetchedResultsControllerDe
     public init(entityName: String,
                 keyForSort: String,
                 predicate: NSPredicate? = nil) {
-        let fetchRequest = NSFetchRequest<T>(entityName: entityName)
+        let fetchRequest = NSFetchRequest<DBModel>(entityName: entityName)
         let sortDescriptor = NSSortDescriptor(key: keyForSort, ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor]
         fetchRequest.predicate = predicate
-        fetchResultController = NSFetchedResultsController<T>(
+        fetchResultController = NSFetchedResultsController<DBModel>(
             fetchRequest: fetchRequest,
             managedObjectContext: CoreDataManager.instance.managedObjectContext,
             sectionNameKeyPath: nil,

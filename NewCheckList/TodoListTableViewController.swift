@@ -14,7 +14,7 @@ class TodoListTableViewController: UITableViewController {
         let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         let aivc = storyboard.instantiateViewController(withIdentifier: "AddItemTableViewController") as! AddItemTableViewController
         aivc.addItemCallback = { [weak self] (name) in
-            self?.addNewItemToDB(newName: name)
+            self?.dataSource.addTodoItem(name: name)
         }
         self.navigationController?.pushViewController(aivc, animated: true)
     }
@@ -56,12 +56,6 @@ class TodoListTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         self.deleteItem(indexPath: indexPath)
-    }
-    
-    func addNewItemToDB(newName: String) {
-        let item = TodoItem(context: CoreDataManager.instance.managedObjectContext)
-        item.name = newName
-        CoreDataManager.instance.saveContext()
     }
     
     func deleteItem(indexPath: IndexPath) {

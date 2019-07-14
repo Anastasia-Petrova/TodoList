@@ -1,6 +1,7 @@
 import CoreData
 
-public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedResultsControllerDelegate where ViewModel: CoreDataMappable, ViewModel.CoreDataModel == DBModel {
+public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedResultsControllerDelegate
+    where ViewModel: CoreDataMappable, DBModel: NSManagedObject, ViewModel.CoreDataModel == DBModel  {
     public typealias UpdateCallback = () -> Void
     public typealias ChangeCallback = (Change) -> Void
     
@@ -74,6 +75,11 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
     func getItem(at indexPath: IndexPath) -> ViewModel {
         let item = fetchResultController.object(at: indexPath)
         return ViewModel(model: item)
+    }
+    
+    func add(model: DBModel) {
+        CoreDataManager.instance.managedObjectContext.insert(model)
+        CoreDataManager.instance.saveContext()
     }
     
     func numberOfItems(in section: Int) -> Int {

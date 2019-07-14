@@ -35,6 +35,12 @@ public final class TodoItemDataSource: NSObject {
     func fetch() {
         coreDataController.fetch()
     }
+    
+    func addTodoItem(name: String) {
+        let item = TodoItem()
+        item.name = name
+        coreDataController.add(model: item)
+    }
 }
 
 extension TodoItemDataSource: UITableViewDataSource {

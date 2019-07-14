@@ -30,7 +30,6 @@ public final class TodoItemDataSource: NSObject {
                 print(error)
             }
         }
-        
     }
     
     func fetch() {

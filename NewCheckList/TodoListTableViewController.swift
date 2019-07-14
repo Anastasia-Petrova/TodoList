@@ -2,6 +2,7 @@ import UIKit
 import CoreData
 
 class TodoListTableViewController: UITableViewController {
+    var dataSource: TodoItemDataSource!
     
     @IBAction func deleteFewItems(_ sender: UIBarButtonItem) {
         if let selectedRows = tableView.indexPathsForSelectedRows {
@@ -17,47 +18,13 @@ class TodoListTableViewController: UITableViewController {
         }
         self.navigationController?.pushViewController(aivc, animated: true)
     }
-    
-    lazy var todoListFetchController: NSFetchedResultsController<TodoItem> = CoreDataManager.instance.fetchedResultsController(entityName: "TodoItem",
-                                                                                                                               keyForSort: "name")
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        performFetch()
-        todoListFetchController.delegate = self
+        dataSource = TodoItemDataSource(tableView: self.tableView)
+        dataSource.fetch()
         navigationItem.leftBarButtonItem = editButtonItem
         tableView.allowsMultipleSelectionDuringEditing = true
-        
-        let cbc = CoreDataController<TodoItem, TodoItemViewModel>(entityName: "TodoItem", keyForSort: "name")
-        cbc.fetch()
-        cbc.beginUpdate = {
-            self.tableView.beginUpdates()
-        }
-        cbc.endUpdate = {
-            self.tableView.endUpdates()
-        }
-        cbc.changeCallback = { change in
-            switch change.type {
-            case let .insert(indexPath):
-                self.tableView.insertRows(at: [indexPath], with: .automatic)
-            case let .delete(indexPath):
-                self.tableView.deleteRows(at: [indexPath], with: .automatic)
-            case let .update(indexPath):
-                self.tableView.reloadRows(at: [indexPath], with: .automatic)
-            case let .move(fromIndexPath, toIndexPath):
-                self.tableView.moveRow(at: fromIndexPath, to: toIndexPath)
-            case let .error(message):
-                print(message)
-            }
-        }
-    }
-    
-    public func performFetch() {
-        do {
-            try todoListFetchController.performFetch()
-        } catch {
-            print(error)
-        }
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -71,32 +38,6 @@ class TodoListTableViewController: UITableViewController {
 //        items.remove(at: sourceIndexPath.row)
 //        items.insert(item, at: destinationIndexPath.row)
 //        tableView.reloadData()
-    }
-
-   override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return numberOfItems(inSection: section)
-    }
-    
-    public func numberOfItems(inSection section: Int) -> Int {
-        if let sections = todoListFetchController.sections {
-            return sections[section].numberOfObjects
-        } else {
-            return 0
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let item = todoListFetchController.object(at: indexPath)
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath) as! TodoItemTableViewCell
-        cell.editItemCallback = { newString in
-            item.name = newString
-            CoreDataManager.instance.saveContext()
-        }
-        return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -124,46 +65,16 @@ class TodoListTableViewController: UITableViewController {
     }
     
     func deleteItem(indexPath: IndexPath) {
-        let item = todoListFetchController.object(at: indexPath)
-        CoreDataManager.instance.managedObjectContext.delete(item)
-        CoreDataManager.instance.saveContext()
+//        let item = todoListFetchController.object(at: indexPath)
+//        CoreDataManager.instance.managedObjectContext.delete(item)
+//        CoreDataManager.instance.saveContext()
     }
     
     func delete(items indexPaths: [IndexPath]) {
-        indexPaths
-        .map(todoListFetchController.object)
-        .forEach(CoreDataManager.instance.managedObjectContext.delete)
-        CoreDataManager.instance.saveContext()
-    }
-}
-
-extension TodoListTableViewController: NSFetchedResultsControllerDelegate {
-    public func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        tableView.beginUpdates()
-    }
-    
-    public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        tableView.endUpdates()
-    }
-    
-    public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
-                           didChange anObject: Any,
-                           at indexPath: IndexPath?,
-                           for type: NSFetchedResultsChangeType,
-                           newIndexPath: IndexPath?) {
-        switch type {
-        case .insert:
-            if let newIndexPath = newIndexPath {
-                tableView.insertRows(at: [newIndexPath], with: .automatic)
-            }
-        case .delete:
-            if let indexPath = indexPath {
-                tableView.deleteRows(at: [indexPath], with: .automatic)
-            }
-        case .update: break
-            
-        default: break
-        }
+//        indexPaths
+//        .map(todoListFetchController.object)
+//        .forEach(CoreDataManager.instance.managedObjectContext.delete)
+//        CoreDataManager.instance.saveContext()
     }
 }
 

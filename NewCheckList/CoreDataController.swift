@@ -70,6 +70,11 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
         let change = Change(type: changeType)
         changeCallback?(change)
     }
+    
+    func getViewModel(indexPath: IndexPath) -> ViewModel {
+        let item = fetchResultController.object(at: indexPath)
+        return ViewModel(model: item)
+    }
 }
 
 extension CoreDataController {

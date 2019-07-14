@@ -41,6 +41,10 @@ public final class TodoItemDataSource: NSObject {
         item.name = name
         coreDataController.add(model: item)
     }
+    
+    func deleteTodoItems(at indexPaths: [IndexPath]) {
+        coreDataController.deleteItems(at: indexPaths)
+    }
 }
 
 extension TodoItemDataSource: UITableViewDataSource {
@@ -53,5 +57,9 @@ extension TodoItemDataSource: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemTableViewCell", for: indexPath) as! TodoItemTableViewCell
         cell.configure(with: vm)
         return cell
+    }
+    
+    public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        deleteTodoItems(at: [indexPath])
     }
 }

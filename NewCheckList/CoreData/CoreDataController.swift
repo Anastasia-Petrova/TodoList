@@ -82,6 +82,13 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
         CoreDataManager.instance.saveContext()
     }
     
+    func deleteItems(at indexPaths: [IndexPath]) {
+        indexPaths
+            .map(fetchResultController.object)
+            .forEach(CoreDataManager.instance.managedObjectContext.delete)
+        CoreDataManager.instance.saveContext()
+    }
+    
     func numberOfItems(in section: Int) -> Int {
         if let sections = fetchResultController.sections {
             return sections[section].numberOfObjects

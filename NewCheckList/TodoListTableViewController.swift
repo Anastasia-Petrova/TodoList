@@ -54,21 +54,8 @@ class TodoListTableViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        self.deleteItem(indexPath: indexPath)
-    }
-    
-    func deleteItem(indexPath: IndexPath) {
-//        let item = todoListFetchController.object(at: indexPath)
-//        CoreDataManager.instance.managedObjectContext.delete(item)
-//        CoreDataManager.instance.saveContext()
-    }
-    
     func delete(items indexPaths: [IndexPath]) {
-//        indexPaths
-//        .map(todoListFetchController.object)
-//        .forEach(CoreDataManager.instance.managedObjectContext.delete)
-//        CoreDataManager.instance.saveContext()
+        dataSource.deleteTodoItems(at: indexPaths)
     }
 }
 

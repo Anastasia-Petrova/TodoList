@@ -4,9 +4,9 @@ class TodoItemTableViewCell: UITableViewCell {
     typealias EditItemCallback = (String?) -> Void
     var editItemCallback: EditItemCallback?
 
-    @IBOutlet weak var checkMark: UIButton!
+    @IBOutlet private var checkMark: UIButton!
     
-    @IBOutlet weak var itemTextField: UITextField!
+    @IBOutlet private var textField: UITextField!
     
     @IBAction func checkItem(_ sender: Any) {
         if checkMark.image(for: .normal) == UIImage(named: "uncheckedMark") {
@@ -16,14 +16,29 @@ class TodoItemTableViewCell: UITableViewCell {
         }
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        checkMark.setImage(UIImage(named: "uncheckedMark") , for: .normal)
+        textField.text = ""
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        itemTextField.delegate = self
+        textField.delegate = self
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
+    }
+    
+    func configure(with viewModel: TodoItemViewModel) {
+        textField.text = viewModel.text
+        if viewModel.isChecked {
+            checkMark.setImage(UIImage(named: "checkedMark") , for: .normal)
+        } else {
+            checkMark.setImage(UIImage(named: "uncheckedMark") , for: .normal)
+        }
     }
 }
 

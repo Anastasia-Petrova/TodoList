@@ -71,9 +71,17 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
         changeCallback?(change)
     }
     
-    func getViewModel(indexPath: IndexPath) -> ViewModel {
+    func getItem(at indexPath: IndexPath) -> ViewModel {
         let item = fetchResultController.object(at: indexPath)
         return ViewModel(model: item)
+    }
+    
+    func numberOfItems(in section: Int) -> Int {
+        if let sections = fetchResultController.sections {
+            return sections[section].numberOfObjects
+        } else {
+            return 0
+        }
     }
 }
 

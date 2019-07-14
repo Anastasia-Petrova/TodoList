@@ -100,7 +100,6 @@ class TodoListTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = todoListFetchController.object(at: indexPath)
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChecklistItem", for: indexPath) as! TodoItemTableViewCell
-        cell.itemTextField.text = item.name
         cell.editItemCallback = { newString in
             item.name = newString
             CoreDataManager.instance.saveContext()

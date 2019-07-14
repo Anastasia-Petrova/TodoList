@@ -93,14 +93,12 @@
 		6DDAA94422D795B3007017BB /* NewCheckList */ = {
 			isa = PBXGroup;
 			children = (
+				6DDAA97E22DBB401007017BB /* DataSource */,
+				6DDAA97D22DBB3E2007017BB /* CoreData */,
 				6DDAA94522D795B3007017BB /* AppDelegate.swift */,
-				6DDAA97322D9DE87007017BB /* CoreDataController.swift */,
-				6DDAA97922DB4029007017BB /* TodoItemViewModel.swift */,
-				6DDAA97B22DB43E2007017BB /* CoreDataMappable.swift */,
 				6DDAA97122D7B7DF007017BB /* AddItemTableViewController.swift */,
 				6DDAA96D22D797B4007017BB /* TodoListTableViewController.swift */,
 				6DDAA96F22D797DE007017BB /* TodoItemTableViewCell.swift */,
-				6DDAA97722D9F578007017BB /* TodoItemDataSource.swift */,
 				6DDAA94922D795B3007017BB /* Main.storyboard */,
 				6DDAA94F22D795B4007017BB /* Assets.xcassets */,
 				6DDAA95422D795B4007017BB /* Info.plist */,
@@ -118,6 +116,24 @@
 				6DDAA95F22D795B4007017BB /* Info.plist */,
 			);
 			path = NewCheckListTests;
+			sourceTree = "<group>";
+		};
+		6DDAA97D22DBB3E2007017BB /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				6DDAA97B22DB43E2007017BB /* CoreDataMappable.swift */,
+				6DDAA97322D9DE87007017BB /* CoreDataController.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		6DDAA97E22DBB401007017BB /* DataSource */ = {
+			isa = PBXGroup;
+			children = (
+				6DDAA97922DB4029007017BB /* TodoItemViewModel.swift */,
+				6DDAA97722D9F578007017BB /* TodoItemDataSource.swift */,
+			);
+			path = DataSource;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

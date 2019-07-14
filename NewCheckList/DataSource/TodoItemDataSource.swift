@@ -12,12 +12,13 @@ public final class TodoItemDataSource: NSObject {
 
 extension TodoItemDataSource: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return coreDataController.numberOfItems(in: section)
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        let vm = coreDataController.getItem(at: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemTableViewCell", for: indexPath) as! TodoItemTableViewCell
+        cell.configure(with: vm)
+        return cell
     }
-    
-    
 }

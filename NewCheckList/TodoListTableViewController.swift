@@ -1,11 +1,3 @@
-//
-//  TodoListTableViewController.swift
-//  NewCheckList
-//
-//  Created by Anastasia Petrova on 7/11/19.
-//  Copyright © 2019 Petrova. All rights reserved.
-//
-
 import UIKit
 import CoreData
 

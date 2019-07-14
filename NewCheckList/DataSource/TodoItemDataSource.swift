@@ -3,10 +3,38 @@ import UIKit
 
 public final class TodoItemDataSource: NSObject {
     let coreDataController: CoreDataController<TodoItem, TodoItemViewModel>
+    let tableView: UITableView
     
-    override init() {
+    init(tableView: UITableView) {
         coreDataController = CoreDataController<TodoItem, TodoItemViewModel>(entityName: "TodoItem", keyForSort: "name")
+        self.tableView = tableView
         super.init()
+        tableView.dataSource = self
+        coreDataController.beginUpdate = { [weak self] in
+            self?.tableView.beginUpdates()
+        }
+        coreDataController.endUpdate = { [weak self] in
+            self?.tableView.endUpdates()
+        }
+        coreDataController.changeCallback = { [weak self] change in
+            switch change.type {
+            case let .delete(indexPath):
+                self?.tableView.deleteRows(at: [indexPath], with: .automatic)
+            case let .insert(indexPath):
+                self?.tableView.insertRows(at: [indexPath], with: .automatic)
+            case let  .move(fromIndexPath, toIndexPath):
+                self?.tableView.moveRow(at: fromIndexPath, to: toIndexPath)
+            case let .update(indexPath):
+                self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+            case let .error(error):
+                print(error)
+            }
+        }
+        
+    }
+    
+    func fetch() {
+        coreDataController.fetch()
     }
 }
 

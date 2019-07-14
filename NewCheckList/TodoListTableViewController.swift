@@ -1,12 +1,11 @@
 import UIKit
-import CoreData
 
 class TodoListTableViewController: UITableViewController {
     var dataSource: TodoItemDataSource!
     
     @IBAction func deleteFewItems(_ sender: UIBarButtonItem) {
         if let selectedRows = tableView.indexPathsForSelectedRows {
-            delete(items: selectedRows)
+            dataSource.deleteTodoItems(at: selectedRows)
         }
     }
     
@@ -32,30 +31,17 @@ class TodoListTableViewController: UITableViewController {
         tableView.setEditing(tableView.isEditing, animated: true)
     }
     
-    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-//            let item = TodoItem(context: CoreDataManager.instance.managedObjectContext)
-//        var items = [item]
-//        items.remove(at: sourceIndexPath.row)
-//        items.insert(item, at: destinationIndexPath.row)
-//        tableView.reloadData()
-    }
-    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView.isEditing {
             return
         }
-        let cell = tableView.cellForRow(at: indexPath) as! TodoItemTableViewCell
+        tableView.deselectRow(at: indexPath, animated: true)
+//        let cell = tableView.cellForRow(at: indexPath) as! TodoItemTableViewCell
 //        if cell.checkmark.text == "" {
 //            cell.checkmark.text = "√"
 //        } else {
 //            cell.checkmark.text = ""
 //        }
-        
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
-    
-    func delete(items indexPaths: [IndexPath]) {
-        dataSource.deleteTodoItems(at: indexPaths)
     }
 }
 

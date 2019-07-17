@@ -1,7 +1,7 @@
 import CoreData
 
 public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedResultsControllerDelegate
-    where ViewModel: CoreDataMappable, DBModel: NSManagedObject, ViewModel.CoreDataModel == DBModel  {
+    where ViewModel: CoreDataMappable, ViewModel.CoreDataModel == DBModel  {
     public typealias UpdateCallback = () -> Void
     public typealias ChangeCallback = (Change) -> Void
     
@@ -77,6 +77,16 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
         return ViewModel(model: item)
     }
     
+    func numberOfItems(in section: Int) -> Int {
+        if let sections = fetchResultController.sections {
+            return sections[section].numberOfObjects
+        } else {
+            return 0
+        }
+    }
+}
+
+extension CoreDataController where DBModel: NSManagedObject {
     func add(model: DBModel) {
         CoreDataManager.instance.managedObjectContext.insert(model)
         CoreDataManager.instance.saveContext()
@@ -87,14 +97,6 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
             .map(fetchResultController.object)
             .forEach(CoreDataManager.instance.managedObjectContext.delete)
         CoreDataManager.instance.saveContext()
-    }
-    
-    func numberOfItems(in section: Int) -> Int {
-        if let sections = fetchResultController.sections {
-            return sections[section].numberOfObjects
-        } else {
-            return 0
-        }
     }
     
     func updateModel(indexPath: IndexPath, update: (DBModel) -> Void) {

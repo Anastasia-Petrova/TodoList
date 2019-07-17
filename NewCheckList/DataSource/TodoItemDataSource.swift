@@ -37,7 +37,7 @@ public final class TodoItemDataSource: NSObject {
     
     func addTodoItem(name: String) {
         let item = TodoItem()
-        item.name = name
+        item.text = name
         coreDataController.add(model: item)
     }
     
@@ -47,7 +47,7 @@ public final class TodoItemDataSource: NSObject {
     
     func editItemName(indexPath: IndexPath, name: String) {
         coreDataController.updateModel(indexPath: indexPath) { (todoItem) in
-            todoItem.name = name
+            todoItem.text = name
         }
     }
 }

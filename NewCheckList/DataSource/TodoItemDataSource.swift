@@ -5,7 +5,7 @@ public final class TodoItemDataSource: NSObject {
     let tableView: UITableView
     
     init(tableView: UITableView) {
-        coreDataController = CoreDataController<TodoItem, TodoItemViewModel>(entityName: "TodoItem", keyForSort: "name")
+        coreDataController = CoreDataController<TodoItem, TodoItemViewModel>(entityName: "TodoItem", keyForSort: "text")
         self.tableView = tableView
         super.init()
         tableView.dataSource = self
@@ -45,9 +45,16 @@ public final class TodoItemDataSource: NSObject {
         coreDataController.deleteItems(at: indexPaths)
     }
     
-    func editItemName(indexPath: IndexPath, name: String) {
+    func editItemName(
+        indexPath: IndexPath,
+        text: String,
+        isChecked: Bool,
+        priority: String
+        ) {
         coreDataController.updateModel(indexPath: indexPath) { (todoItem) in
-            todoItem.text = name
+            todoItem.text = text
+            todoItem.isChecked = isChecked
+            todoItem.priority = priority
         }
     }
 }
@@ -62,7 +69,20 @@ extension TodoItemDataSource: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemTableViewCell", for: indexPath) as! TodoItemTableViewCell
         cell.configure(with: vm)
         cell.editItemCallback = { [weak self] text in
-            self?.editItemName(indexPath: indexPath, name: text ?? "")
+            self?.editItemName(
+                indexPath: indexPath,
+                text: text ?? "",
+                isChecked: vm.isChecked,
+                priority: vm.priority.rawValue
+            )
+        }
+        cell.checkBoxCallback = { [weak self] in
+            self?.editItemName(
+                indexPath: indexPath,
+                text: vm.text,
+                isChecked: !vm.isChecked,
+                priority: vm.priority.rawValue
+            )
         }
         return cell
     }

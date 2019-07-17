@@ -4,6 +4,12 @@ struct TodoItemViewModel  {
     let priority: Prioroty
 }
 
+extension TodoItemViewModel {
+    var checkBoxIconName: String {
+        return isChecked ? "checkedMark" : "uncheckedMark"
+    }
+}
+
 extension TodoItemViewModel: CoreDataMappable {
     typealias CoreDataModel = TodoItem
     

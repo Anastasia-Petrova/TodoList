@@ -44,6 +44,12 @@ public final class TodoItemDataSource: NSObject {
     func deleteTodoItems(at indexPaths: [IndexPath]) {
         coreDataController.deleteItems(at: indexPaths)
     }
+    
+    func editItemName(indexPath: IndexPath, name: String) {
+        coreDataController.updateModel(indexPath: indexPath) { (todoItem) in
+            todoItem.name = name
+        }
+    }
 }
 
 extension TodoItemDataSource: UITableViewDataSource {
@@ -55,6 +61,9 @@ extension TodoItemDataSource: UITableViewDataSource {
         let vm = coreDataController.getItem(at: indexPath)
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemTableViewCell", for: indexPath) as! TodoItemTableViewCell
         cell.configure(with: vm)
+        cell.editItemCallback = { [weak self] text in
+            self?.editItemName(indexPath: indexPath, name: text ?? "")
+        }
         return cell
     }
     

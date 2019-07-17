@@ -96,6 +96,12 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
             return 0
         }
     }
+    
+    func updateModel(indexPath: IndexPath, update: (DBModel) -> Void) {
+        let item = fetchResultController.object(at: indexPath)
+        update(item)
+        CoreDataManager.instance.saveContext()
+    }
 }
 
 extension CoreDataController {

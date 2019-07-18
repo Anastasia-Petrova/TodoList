@@ -95,11 +95,9 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
         }
     }
     
-//    public func priorityForSectionIndex(_ index: Int) -> Change.ChangeType {
-//        return
-//        
-////        return ToDoList.Priority(rawValue: index)
-//    }
+    func priorityForSectionIndex(for section: Int) -> String? {
+        return fetchResultController.sections?[section].name
+    }
 }
 
 extension CoreDataController where DBModel: NSManagedObject {

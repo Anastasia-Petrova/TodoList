@@ -97,15 +97,16 @@ extension TodoItemDataSource: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        var title: String? = nil
-        if section == 0 {
-            title = "High Propirity Todos"
-        } else if section == 1 {
-            title = "Medium Propirity Todos"
-        } else if section == 2 {
-            title = "Low Propirity Todos"
-        }
-        return title
+        return coreDataController.priorityForSectionIndex(for: section)
+//        var title: String? = nil
+//        if section == 0 {
+//            title = "High Propirity Todos"
+//        } else if section == 1 {
+//            title = "Medium Propirity Todos"
+//        } else if section == 2 {
+//            title = "Low Propirity Todos"
+//        }
+//        return title
     }
     
     //TODO: add moveRowAt func

@@ -16,15 +16,17 @@ public class CoreDataManager {
     public func fetchedResultsController<T: NSManagedObject>(
         entityName: String,
         keyForSort: String,
+        sectionKey: String,
         predicate: NSPredicate? = nil
         ) -> NSFetchedResultsController<T> {
         
         let fetchRequest = NSFetchRequest<T>(entityName: entityName)
         let sortDescriptor = NSSortDescriptor(key: keyForSort, ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptor]
+        let sectionSortDescriptor = NSSortDescriptor(key: sectionKey, ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor, sectionSortDescriptor]
         fetchRequest.predicate = predicate
         
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataManager.instance.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataManager.instance.managedObjectContext, sectionNameKeyPath: sectionKey, cacheName: nil)
         
         return fetchedResultsController
     }

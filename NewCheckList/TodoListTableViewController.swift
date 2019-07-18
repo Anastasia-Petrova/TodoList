@@ -24,6 +24,7 @@ class TodoListTableViewController: UITableViewController {
         dataSource.fetch()
         navigationItem.leftBarButtonItem = editButtonItem
         tableView.allowsMultipleSelectionDuringEditing = true
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {

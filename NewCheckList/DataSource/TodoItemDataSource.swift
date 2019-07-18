@@ -5,7 +5,7 @@ public final class TodoItemDataSource: NSObject {
     let tableView: UITableView
     
     init(tableView: UITableView) {
-        coreDataController = CoreDataController<TodoItem, TodoItemViewModel>(entityName: "TodoItem", keyForSort: "text")
+        coreDataController = CoreDataController<TodoItem, TodoItemViewModel>(entityName: "TodoItem", keyForSort: "text", sectionKey: "priority")
         self.tableView = tableView
         super.init()
         tableView.dataSource = self
@@ -64,6 +64,11 @@ extension TodoItemDataSource: UITableViewDataSource {
         return coreDataController.numberOfItems(in: section)
     }
     
+    public func numberOfSections(in tableView: UITableView) -> Int {
+        return coreDataController.numberOfSections()
+    }
+    
+    
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let vm = coreDataController.getItem(at: indexPath)
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemTableViewCell", for: indexPath) as! TodoItemTableViewCell
@@ -89,6 +94,18 @@ extension TodoItemDataSource: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         deleteTodoItems(at: [indexPath])
+    }
+    
+    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        var title: String? = nil
+        if section == 0 {
+            title = "High Propirity Todos"
+        } else if section == 1 {
+            title = "Medium Propirity Todos"
+        } else if section == 2 {
+            title = "Low Propirity Todos"
+        }
+        return title
     }
     
     //TODO: add moveRowAt func

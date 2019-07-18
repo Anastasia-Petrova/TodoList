@@ -12,15 +12,17 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
     
     public init(entityName: String,
                 keyForSort: String,
-                predicate: NSPredicate? = nil) {
+                predicate: NSPredicate? = nil,
+                sectionKey: String) {
         let fetchRequest = NSFetchRequest<DBModel>(entityName: entityName)
         let sortDescriptor = NSSortDescriptor(key: keyForSort, ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptor]
+        let sectionSortDescriptor = NSSortDescriptor(key: sectionKey, ascending: true)
+        fetchRequest.sortDescriptors = [sortDescriptor, sectionSortDescriptor]
         fetchRequest.predicate = predicate
         fetchResultController = NSFetchedResultsController<DBModel>(
             fetchRequest: fetchRequest,
             managedObjectContext: CoreDataManager.instance.managedObjectContext,
-            sectionNameKeyPath: nil,
+            sectionNameKeyPath: sectionKey,
             cacheName: nil)
         super.init()
         fetchResultController.delegate = self
@@ -84,6 +86,20 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
             return 0
         }
     }
+    
+    func numberOfSections() -> Int {
+        if let sections = fetchResultController.sections?.count {
+            return sections
+        } else {
+            return 1
+        }
+    }
+    
+//    public func priorityForSectionIndex(_ index: Int) -> Change.ChangeType {
+//        return
+//        
+////        return ToDoList.Priority(rawValue: index)
+//    }
 }
 
 extension CoreDataController where DBModel: NSManagedObject {

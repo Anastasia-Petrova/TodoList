@@ -16,7 +16,7 @@ extension TodoItemViewModel: CoreDataMappable {
     init(model: TodoItem) {
         text = model.text ?? ""
         isChecked = model.isChecked
-        let defaultPriority = Prioroty.medium
+        let defaultPriority = Prioroty.high
         if let priorityString = model.priority {
             priority = Prioroty(rawValue: priorityString) ?? defaultPriority
         } else {

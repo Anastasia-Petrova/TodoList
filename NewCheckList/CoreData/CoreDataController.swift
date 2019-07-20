@@ -19,9 +19,10 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
         let sectionSortDescriptor = NSSortDescriptor(key: sectionKey, ascending: true)
         fetchRequest.sortDescriptors = [sortDescriptor, sectionSortDescriptor]
         fetchRequest.predicate = predicate
+        
         fetchResultController = NSFetchedResultsController<DBModel>(
             fetchRequest: fetchRequest,
-            managedObjectContext: CoreDataManager.instance.managedObjectContext,
+            managedObjectContext: CoreDataStack.instance.context,
             sectionNameKeyPath: sectionKey,
             cacheName: nil)
         super.init()
@@ -102,21 +103,21 @@ public final class CoreDataController<DBModel, ViewModel>: NSObject, NSFetchedRe
 
 extension CoreDataController where DBModel: NSManagedObject {
     func add(model: DBModel) {
-        CoreDataManager.instance.managedObjectContext.insert(model)
-        CoreDataManager.instance.saveContext()
+        CoreDataStack.instance.context.insert(model)
+        CoreDataStack.instance.saveContext()
     }
     
     func deleteItems(at indexPaths: [IndexPath]) {
         indexPaths
             .map(fetchResultController.object)
-            .forEach(CoreDataManager.instance.managedObjectContext.delete)
-        CoreDataManager.instance.saveContext()
+            .forEach(CoreDataStack.instance.context.delete)
+        CoreDataStack.instance.saveContext()
     }
     
     func updateModel(indexPath: IndexPath, update: (DBModel) -> Void) {
         let item = fetchResultController.object(at: indexPath)
         update(item)
-        CoreDataManager.instance.saveContext()
+        CoreDataStack.instance.saveContext()
     }
 }
 

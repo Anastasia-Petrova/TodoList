@@ -1,34 +1,29 @@
 import CoreData
 import Foundation
 
-public class CoreDataManager {
+public class CoreDataStack {
     // Singleton
-    public static let instance = CoreDataManager()
+    public static let instance = CoreDataStack()
     
     private init() {}
     
-    // Entity for Name
-    public func entityForName(entityName: String) -> NSEntityDescription {
-        return NSEntityDescription.entity(forEntityName: entityName, in: self.managedObjectContext)!
+    public lazy var context: NSManagedObjectContext = self.createContext()
+    
+    public func saveContext () {
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                let nserror = error as NSError
+                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+                abort()
+            }
+        }
     }
     
-    // Fetched Results Controller for Entity Name
-    public func fetchedResultsController<T: NSManagedObject>(
-        entityName: String,
-        keyForSort: String,
-        sectionKey: String,
-        predicate: NSPredicate? = nil
-        ) -> NSFetchedResultsController<T> {
-        
-        let fetchRequest = NSFetchRequest<T>(entityName: entityName)
-        let sortDescriptor = NSSortDescriptor(key: keyForSort, ascending: true)
-        let sectionSortDescriptor = NSSortDescriptor(key: sectionKey, ascending: true)
-        fetchRequest.sortDescriptors = [sortDescriptor, sectionSortDescriptor]
-        fetchRequest.predicate = predicate
-        
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: CoreDataManager.instance.managedObjectContext, sectionNameKeyPath: sectionKey, cacheName: nil)
-        
-        return fetchedResultsController
+    // Entity for Name
+    public func entityForName(entityName: String) -> NSEntityDescription {
+        return NSEntityDescription.entity(forEntityName: entityName, in: self.context)!
     }
     
     // MARK: - Core Data stack
@@ -65,29 +60,10 @@ public class CoreDataManager {
         return coordinator
     }()
     
-    public func createContext() -> NSManagedObjectContext {
+    private func createContext() -> NSManagedObjectContext {
         let coordinator = self.persistentStoreCoordinator
-        var managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        let managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
     }
-    
-    public lazy var managedObjectContext: NSManagedObjectContext = self.createContext()
-    
-    // MARK: - Core Data Saving support
-    
-    public func saveContext () {
-        if managedObjectContext.hasChanges {
-            do {
-                try managedObjectContext.save()
-            } catch {
-                let nserror = error as NSError
-                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-                abort()
-            }
-        }
-    }
-    
 }
-
-

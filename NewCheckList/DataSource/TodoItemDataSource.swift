@@ -38,6 +38,7 @@ public final class TodoItemDataSource: NSObject {
     func addTodoItem(name: String) {
         let item = TodoItem()
         item.text = name
+        item.priority = TodoItemViewModel.Prioroty.medium.rawValue
         coreDataController.add(model: item)
     }
     
@@ -98,15 +99,6 @@ extension TodoItemDataSource: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return coreDataController.priorityForSectionIndex(for: section)
-//        var title: String? = nil
-//        if section == 0 {
-//            title = "High Propirity Todos"
-//        } else if section == 1 {
-//            title = "Medium Propirity Todos"
-//        } else if section == 2 {
-//            title = "Low Propirity Todos"
-//        }
-//        return title
     }
     
     //TODO: add moveRowAt func

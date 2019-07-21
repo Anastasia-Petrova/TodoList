@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import NewCheckList
+@testable import TodoList
 
 class NewCheckListTests: XCTestCase {
 

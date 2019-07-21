@@ -1,0 +1,3 @@
+[submodule "Dependancies/EasyCoreData"]
+	path = Dependancies/EasyCoreData
+	url = https://github.com/Anastasia-Petrova/EasyCoreData.git

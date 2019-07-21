@@ -5,6 +5,6 @@
       location = "group:Dependancies/EasyCoreData/EasyCoreData.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:NewCheckList.xcodeproj">
+      location = "group:/Users/anastasiapetrova/Documents/Projects/NewCheckList/TodoList.xcodeproj">
    </FileRef>
 </Workspace>

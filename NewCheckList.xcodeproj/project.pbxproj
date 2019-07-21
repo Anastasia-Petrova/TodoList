@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6D832F8122E482AD00C0EEDE /* EasyCoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D832F8022E482AD00C0EEDE /* EasyCoreData.framework */; };
+		6D832F8222E482AD00C0EEDE /* EasyCoreData.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6D832F8022E482AD00C0EEDE /* EasyCoreData.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6DDAA94622D795B3007017BB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDAA94522D795B3007017BB /* AppDelegate.swift */; };
 		6DDAA94B22D795B3007017BB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6DDAA94922D795B3007017BB /* Main.storyboard */; };
 		6DDAA95022D795B4007017BB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6DDAA94F22D795B4007017BB /* Assets.xcassets */; };
@@ -33,7 +35,22 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		6D832F8322E482AE00C0EEDE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				6D832F8222E482AD00C0EEDE /* EasyCoreData.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		6D832F8022E482AD00C0EEDE /* EasyCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EasyCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DDAA94222D795B3007017BB /* NewCheckList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewCheckList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DDAA94522D795B3007017BB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6DDAA94A22D795B3007017BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -59,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D832F8122E482AD00C0EEDE /* EasyCoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +93,7 @@
 		6DDAA93922D795B3007017BB = {
 			isa = PBXGroup;
 			children = (
+				6D832F8022E482AD00C0EEDE /* EasyCoreData.framework */,
 				6DDAA94422D795B3007017BB /* NewCheckList */,
 				6DDAA95C22D795B4007017BB /* NewCheckListTests */,
 				6DDAA94322D795B3007017BB /* Products */,
@@ -146,6 +165,7 @@
 				6DDAA93E22D795B3007017BB /* Sources */,
 				6DDAA93F22D795B3007017BB /* Frameworks */,
 				6DDAA94022D795B3007017BB /* Resources */,
+				6D832F8322E482AE00C0EEDE /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

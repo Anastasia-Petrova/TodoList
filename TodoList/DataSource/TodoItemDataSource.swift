@@ -18,22 +18,28 @@ public final class TodoItemDataSource: NSObject {
         }
         coreDataController.changeCallback = { [weak self] change in
             switch change.type {
-            case let .delete(indexPath):
-                if self?.coreDataController.numberOfItems(in: indexPath.section) == 0 {
-                    self?.tableView.deleteSections(IndexSet(integer: indexPath.section), with: .automatic)
+            case let .row(rowChangeType):
+                switch rowChangeType {
+                case let .delete(indexPath):
+                    self?.tableView.deleteRows(at: [indexPath], with: .automatic)
+                case let .insert(indexPath):
+                    self?.tableView.insertRows(at: [indexPath], with: .automatic)
+                case let  .move(fromIndexPath, toIndexPath):
+                    self?.tableView.moveRow(at: fromIndexPath, to: toIndexPath)
+                case let .update(indexPath):
+                    self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+                case let .error(error):
+                    print(error)
                 }
-                self?.tableView.deleteRows(at: [indexPath], with: .automatic)
-            case let .insert(indexPath):
-                if self?.coreDataController.numberOfItems(in: indexPath.section) == 1 {
-                    self?.tableView.insertSections(IndexSet(integer: indexPath.section), with: .automatic)
+            case let .section(sectionChangeType):
+                switch sectionChangeType {
+                case let .delete(index):
+                    self?.tableView.deleteSections(IndexSet(integer: index), with: .automatic)
+                case let .insert(index):
+                    self?.tableView.insertSections(IndexSet(integer: index), with: .automatic)
+                case let .error(error):
+                    print(error)
                 }
-                self?.tableView.insertRows(at: [indexPath], with: .automatic)
-            case let  .move(fromIndexPath, toIndexPath):
-                self?.tableView.moveRow(at: fromIndexPath, to: toIndexPath)
-            case let .update(indexPath):
-                self?.tableView.reloadRows(at: [indexPath], with: .automatic)
-            case let .error(error):
-                print(error)
             }
         }
     }

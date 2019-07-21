@@ -19,8 +19,14 @@ public final class TodoItemDataSource: NSObject {
         coreDataController.changeCallback = { [weak self] change in
             switch change.type {
             case let .delete(indexPath):
+                if self?.coreDataController.numberOfItems(in: indexPath.section) == 0 {
+                    self?.tableView.deleteSections(IndexSet(integer: indexPath.section), with: .automatic)
+                }
                 self?.tableView.deleteRows(at: [indexPath], with: .automatic)
             case let .insert(indexPath):
+                if self?.coreDataController.numberOfItems(in: indexPath.section) == 1 {
+                    self?.tableView.insertSections(IndexSet(integer: indexPath.section), with: .automatic)
+                }
                 self?.tableView.insertRows(at: [indexPath], with: .automatic)
             case let  .move(fromIndexPath, toIndexPath):
                 self?.tableView.moveRow(at: fromIndexPath, to: toIndexPath)
@@ -70,7 +76,6 @@ extension TodoItemDataSource: UITableViewDataSource {
         return coreDataController.numberOfSections()
     }
     
-    
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let vm = coreDataController.getItem(at: indexPath)
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemTableViewCell", for: indexPath) as! TodoItemTableViewCell
@@ -99,7 +104,7 @@ extension TodoItemDataSource: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return coreDataController.priorityForSectionIndex(for: section)
+        return coreDataController.priorityForSection(at: section)
     }
     
     //TODO: add moveRowAt func

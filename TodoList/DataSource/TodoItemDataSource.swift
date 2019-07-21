@@ -6,7 +6,7 @@ public final class TodoItemDataSource: NSObject {
     let tableView: UITableView
     
     init(tableView: UITableView) {
-        coreDataController = CoreDataController<TodoItem, TodoItemViewModel>(entityName: "TodoItem", keyForSort: "text", sectionKey: "priority")
+        coreDataController = CoreDataController<TodoItem, TodoItemViewModel>(entityName: "TodoItem", keyForSort: "index", sectionKey: "priority")
         self.tableView = tableView
         super.init()
         tableView.dataSource = self
@@ -52,6 +52,14 @@ public final class TodoItemDataSource: NSObject {
         let item = TodoItem()
         item.text = name
         item.priority = TodoItemViewModel.Prioroty.medium.sectionName
+        item.index = 0
+        let numberOfItems = coreDataController.numberOfItems(in: 1)
+        for index in 0..<numberOfItems {
+            let indexPath = IndexPath(item: index, section: 1)
+            coreDataController.updateModel(indexPath: indexPath) { (item) in
+                item.index = Int32(index + 1)
+            }
+        }
         coreDataController.add(model: item)
     }
     

@@ -4,6 +4,7 @@ struct TodoItemViewModel  {
     let text: String
     let isChecked: Bool
     let priority: Prioroty
+    let index: Int
 }
 
 extension TodoItemViewModel {
@@ -24,6 +25,7 @@ extension TodoItemViewModel: CoreDataMappable {
         } else {
             priority = defaultPriority
         }
+        index = Int(model.index)
     }
 }
 

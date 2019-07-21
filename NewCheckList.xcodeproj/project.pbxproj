@@ -13,15 +13,12 @@
 		6DDAA94B22D795B3007017BB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6DDAA94922D795B3007017BB /* Main.storyboard */; };
 		6DDAA95022D795B4007017BB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6DDAA94F22D795B4007017BB /* Assets.xcassets */; };
 		6DDAA95E22D795B4007017BB /* NewCheckListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDAA95D22D795B4007017BB /* NewCheckListTests.swift */; };
-		6DDAA96922D795E8007017BB /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDAA96822D795E8007017BB /* CoreDataStack.swift */; };
 		6DDAA96C22D79624007017BB /* TodoList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6DDAA96A22D79624007017BB /* TodoList.xcdatamodeld */; };
 		6DDAA96E22D797B4007017BB /* TodoListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDAA96D22D797B4007017BB /* TodoListTableViewController.swift */; };
 		6DDAA97022D797DE007017BB /* TodoItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDAA96F22D797DE007017BB /* TodoItemTableViewCell.swift */; };
 		6DDAA97222D7B7DF007017BB /* AddItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDAA97122D7B7DF007017BB /* AddItemTableViewController.swift */; };
-		6DDAA97422D9DE87007017BB /* CoreDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDAA97322D9DE87007017BB /* CoreDataController.swift */; };
 		6DDAA97822D9F578007017BB /* TodoItemDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDAA97722D9F578007017BB /* TodoItemDataSource.swift */; };
 		6DDAA97A22DB4029007017BB /* TodoItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDAA97922DB4029007017BB /* TodoItemViewModel.swift */; };
-		6DDAA97C22DB43E2007017BB /* CoreDataMappable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDAA97B22DB43E2007017BB /* CoreDataMappable.swift */; };
 		6DDAA98022DBCA1E007017BB /* TodoItem+Init.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDAA97F22DBCA1E007017BB /* TodoItem+Init.swift */; };
 /* End PBXBuildFile section */
 
@@ -59,15 +56,12 @@
 		6DDAA95922D795B4007017BB /* NewCheckListTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NewCheckListTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DDAA95D22D795B4007017BB /* NewCheckListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCheckListTests.swift; sourceTree = "<group>"; };
 		6DDAA95F22D795B4007017BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6DDAA96822D795E8007017BB /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		6DDAA96B22D79624007017BB /* TodoList.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TodoList.xcdatamodel; sourceTree = "<group>"; };
 		6DDAA96D22D797B4007017BB /* TodoListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListTableViewController.swift; sourceTree = "<group>"; };
 		6DDAA96F22D797DE007017BB /* TodoItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItemTableViewCell.swift; sourceTree = "<group>"; };
 		6DDAA97122D7B7DF007017BB /* AddItemTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemTableViewController.swift; sourceTree = "<group>"; };
-		6DDAA97322D9DE87007017BB /* CoreDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataController.swift; sourceTree = "<group>"; };
 		6DDAA97722D9F578007017BB /* TodoItemDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItemDataSource.swift; sourceTree = "<group>"; };
 		6DDAA97922DB4029007017BB /* TodoItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItemViewModel.swift; sourceTree = "<group>"; };
-		6DDAA97B22DB43E2007017BB /* CoreDataMappable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataMappable.swift; sourceTree = "<group>"; };
 		6DDAA97F22DBCA1E007017BB /* TodoItem+Init.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodoItem+Init.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -113,7 +107,6 @@
 			isa = PBXGroup;
 			children = (
 				6DDAA97E22DBB401007017BB /* DataSource */,
-				6DDAA97D22DBB3E2007017BB /* CoreData */,
 				6DDAA94522D795B3007017BB /* AppDelegate.swift */,
 				6DDAA97122D7B7DF007017BB /* AddItemTableViewController.swift */,
 				6DDAA96D22D797B4007017BB /* TodoListTableViewController.swift */,
@@ -135,20 +128,10 @@
 			path = NewCheckListTests;
 			sourceTree = "<group>";
 		};
-		6DDAA97D22DBB3E2007017BB /* CoreData */ = {
-			isa = PBXGroup;
-			children = (
-				6DDAA97B22DB43E2007017BB /* CoreDataMappable.swift */,
-				6DDAA96822D795E8007017BB /* CoreDataStack.swift */,
-				6DDAA97322D9DE87007017BB /* CoreDataController.swift */,
-				6DDAA97F22DBCA1E007017BB /* TodoItem+Init.swift */,
-			);
-			path = CoreData;
-			sourceTree = "<group>";
-		};
 		6DDAA97E22DBB401007017BB /* DataSource */ = {
 			isa = PBXGroup;
 			children = (
+				6DDAA97F22DBCA1E007017BB /* TodoItem+Init.swift */,
 				6DDAA97922DB4029007017BB /* TodoItemViewModel.swift */,
 				6DDAA97722D9F578007017BB /* TodoItemDataSource.swift */,
 			);
@@ -258,11 +241,8 @@
 			files = (
 				6DDAA97222D7B7DF007017BB /* AddItemTableViewController.swift in Sources */,
 				6DDAA96C22D79624007017BB /* TodoList.xcdatamodeld in Sources */,
-				6DDAA97422D9DE87007017BB /* CoreDataController.swift in Sources */,
 				6DDAA97A22DB4029007017BB /* TodoItemViewModel.swift in Sources */,
 				6DDAA97022D797DE007017BB /* TodoItemTableViewCell.swift in Sources */,
-				6DDAA96922D795E8007017BB /* CoreDataStack.swift in Sources */,
-				6DDAA97C22DB43E2007017BB /* CoreDataMappable.swift in Sources */,
 				6DDAA97822D9F578007017BB /* TodoItemDataSource.swift in Sources */,
 				6DDAA98022DBCA1E007017BB /* TodoItem+Init.swift in Sources */,
 				6DDAA94622D795B3007017BB /* AppDelegate.swift in Sources */,

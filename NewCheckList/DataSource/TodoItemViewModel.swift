@@ -1,3 +1,5 @@
+import EasyCoreData
+
 struct TodoItemViewModel  {
     let text: String
     let isChecked: Bool

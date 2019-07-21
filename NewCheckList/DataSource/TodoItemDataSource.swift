@@ -1,4 +1,5 @@
 import UIKit
+import EasyCoreData
 
 public final class TodoItemDataSource: NSObject {
     let coreDataController: CoreDataController<TodoItem, TodoItemViewModel>

@@ -53,11 +53,14 @@ public final class TodoItemDataSource: NSObject {
         item.text = name
         item.priority = TodoItemViewModel.Prioroty.medium.sectionName
         item.index = 0
-        let numberOfItems = coreDataController.numberOfItems(in: 1)
-        for index in 0..<numberOfItems {
-            let indexPath = IndexPath(item: index, section: 1)
-            coreDataController.updateModel(indexPath: indexPath) { (item) in
-                item.index = Int32(index + 1)
+        
+        if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemViewModel.Prioroty.medium.sectionName) {
+            let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
+            for index in 0..<numberOfItems {
+                let indexPath = IndexPath(item: index, section: sectionIndex)
+                coreDataController.updateModel(indexPath: indexPath) { (item) in
+                    item.index = Int32(index + 1)
+                }
             }
         }
         coreDataController.add(model: item)
@@ -126,5 +129,18 @@ extension TodoItemDataSource: UITableViewDataSource {
         }
     }
     
-    //TODO: add moveRowAt func
+    public func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        coreDataController.updateModel(indexPath: sourceIndexPath) { (item) in
+            item.index = Int32(destinationIndexPath.row)
+            item.priority = coreDataController.nameForSection(at: destinationIndexPath.section)
+            let sectionIndex = destinationIndexPath.section
+            let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
+            for index in 0..<numberOfItems {
+                let indexPath = IndexPath(item: index, section: sectionIndex)
+                coreDataController.updateModel(indexPath: indexPath) { (item) in
+                    item.index = Int32(index + 1)
+                }
+            }
+        }
+    }
 }

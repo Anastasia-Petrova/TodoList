@@ -37,12 +37,7 @@ class TodoListTableViewController: UITableViewController {
             return
         }
         tableView.deselectRow(at: indexPath, animated: true)
-//        let cell = tableView.cellForRow(at: indexPath) as! TodoItemTableViewCell
-//        if cell.checkmark.text == "" {
-//            cell.checkmark.text = "√"
-//        } else {
-//            cell.checkmark.text = ""
-//        }
+
     }
 }
 

@@ -49,18 +49,20 @@ public final class TodoItemDataSource: NSObject {
     }
     
     func addTodoItem(name: String) {
+        guard let sectionIndex = coreDataController.indexForSectionName(name: TodoItemViewModel.Prioroty.medium.sectionName) else {
+            return
+        }
+        
         let item = TodoItem()
         item.text = name
         item.priority = TodoItemViewModel.Prioroty.medium.sectionName
         item.index = 0
         
-        if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemViewModel.Prioroty.medium.sectionName) {
-            let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
-            let indexPaths = (0..<numberOfItems).map{ IndexPath(row: $0, section: sectionIndex) }
-            coreDataController.updateModels(indexPaths: indexPaths) { (items) in
-                items.forEach {
-                    $0.index += 1
-                }
+        let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
+        let indexPaths = (0..<numberOfItems).map{ IndexPath(row: $0, section: sectionIndex) }
+        coreDataController.updateModels(indexPaths: indexPaths) { (items) in
+            items.forEach {
+                $0.index += 1
             }
         }
         coreDataController.add(model: item)
@@ -130,17 +132,20 @@ extension TodoItemDataSource: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-//        coreDataController.updateModels(indexPaths: sourceIndexPath) { (item) in
-//            item.index = Int32(destinationIndexPath.row)
-//            item.priority = coreDataController.nameForSection(at: destinationIndexPath.section)
-//        }
-//        let sectionIndex = destinationIndexPath.section
-//        let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
-//        for index in 0..<numberOfItems {
-//            let indexPath = IndexPath(item: index, section: sectionIndex)
-//            coreDataController.updateModel(indexPath: indexPath) { (item) in
-//                item.index = Int32(index + 1)
-//            }
-//        }
+        let isMovingUp = destinationIndexPath.row < sourceIndexPath.row
+        let startIndex = isMovingUp ? destinationIndexPath.row : sourceIndexPath.row
+        let endIndex = isMovingUp ? sourceIndexPath.row : destinationIndexPath.row
+        let sectionIndex = destinationIndexPath.section
+        let indexPaths = (startIndex...endIndex).map{ IndexPath(row: $0, section: sectionIndex) }
+        
+        coreDataController.updateModels(indexPaths: indexPaths) { (items) in
+            var mutableItems = items
+            let movingItem = isMovingUp ? mutableItems.removeLast() : mutableItems.removeFirst()
+            movingItem.index = Int32(destinationIndexPath.row)
+            movingItem.priority = coreDataController.nameForSection(at: destinationIndexPath.section)
+            mutableItems.forEach {
+                $0.index += isMovingUp ? 1 : -1
+            }
+        }
     }
 }

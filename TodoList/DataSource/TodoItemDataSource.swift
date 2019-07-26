@@ -24,7 +24,7 @@ public final class TodoItemDataSource: NSObject {
                     self?.tableView.deleteRows(at: [indexPath], with: .automatic)
                 case let .insert(indexPath):
                     self?.tableView.insertRows(at: [indexPath], with: .automatic)
-                case let  .move(fromIndexPath, toIndexPath):
+                case let .move(fromIndexPath, toIndexPath):
                     self?.tableView.moveRow(at: fromIndexPath, to: toIndexPath)
                 case let .update(indexPath):
                     self?.tableView.reloadRows(at: [indexPath], with: .automatic)
@@ -56,10 +56,10 @@ public final class TodoItemDataSource: NSObject {
         
         if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemViewModel.Prioroty.medium.sectionName) {
             let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
-            for index in 0..<numberOfItems {
-                let indexPath = IndexPath(item: index, section: sectionIndex)
-                coreDataController.updateModel(indexPath: indexPath) { (item) in
-                    item.index = Int32(index + 1)
+            let indexPaths = (0..<numberOfItems).map{ IndexPath(row: $0, section: sectionIndex) }
+            coreDataController.updateModels(indexPaths: indexPaths) { (items) in
+                items.forEach {
+                    $0.index += 1
                 }
             }
         }
@@ -76,10 +76,10 @@ public final class TodoItemDataSource: NSObject {
         isChecked: Bool,
         priority: String
         ) {
-        coreDataController.updateModel(indexPath: indexPath) { (todoItem) in
-            todoItem.text = text
-            todoItem.isChecked = isChecked
-            todoItem.priority = priority
+        coreDataController.updateModels(indexPaths: [indexPath]) { (todoItems) in
+            todoItems.first?.text = text
+            todoItems.first?.isChecked = isChecked
+            todoItems.first?.priority = priority
         }
     }
 }
@@ -130,17 +130,17 @@ extension TodoItemDataSource: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        coreDataController.updateModel(indexPath: sourceIndexPath) { (item) in
-            item.index = Int32(destinationIndexPath.row)
-            item.priority = coreDataController.nameForSection(at: destinationIndexPath.section)
-            let sectionIndex = destinationIndexPath.section
-            let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
-            for index in 0..<numberOfItems {
-                let indexPath = IndexPath(item: index, section: sectionIndex)
-                coreDataController.updateModel(indexPath: indexPath) { (item) in
-                    item.index = Int32(index + 1)
-                }
-            }
-        }
+//        coreDataController.updateModels(indexPaths: sourceIndexPath) { (item) in
+//            item.index = Int32(destinationIndexPath.row)
+//            item.priority = coreDataController.nameForSection(at: destinationIndexPath.section)
+//        }
+//        let sectionIndex = destinationIndexPath.section
+//        let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
+//        for index in 0..<numberOfItems {
+//            let indexPath = IndexPath(item: index, section: sectionIndex)
+//            coreDataController.updateModel(indexPath: indexPath) { (item) in
+//                item.index = Int32(index + 1)
+//            }
+//        }
     }
 }

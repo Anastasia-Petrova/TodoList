@@ -26,20 +26,11 @@ class TodoListTableViewController: UITableViewController {
         tableView.allowsMultipleSelectionDuringEditing = true
         navigationController?.navigationBar.prefersLargeTitles = true
     }
-    
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: true)
-        tableView.setEditing(tableView.isEditing, animated: true)
-    }
-    
+ 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView.isEditing {
             return
         }
         tableView.deselectRow(at: indexPath, animated: true)
-
     }
 }
-
-
-

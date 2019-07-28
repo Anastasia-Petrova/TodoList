@@ -4,6 +4,7 @@ import EasyCoreData
 public final class TodoItemDataSource: NSObject {
     let coreDataController: CoreDataController<TodoItem, TodoItemViewModel>
     let tableView: UITableView
+    var shouldListenDataBaseUpdates = true
     
     init(tableView: UITableView) {
         coreDataController = CoreDataController<TodoItem, TodoItemViewModel>(entityName: "TodoItem", keyForSort: "index", sectionKey: "priority")
@@ -11,12 +12,15 @@ public final class TodoItemDataSource: NSObject {
         super.init()
         tableView.dataSource = self
         coreDataController.beginUpdate = { [weak self] in
+            guard self?.shouldListenDataBaseUpdates == true else { return }
             self?.tableView.beginUpdates()
         }
         coreDataController.endUpdate = { [weak self] in
+            guard self?.shouldListenDataBaseUpdates == true else { return }
             self?.tableView.endUpdates()
         }
         coreDataController.changeCallback = { [weak self] change in
+            guard self?.shouldListenDataBaseUpdates == true else { return }
             switch change.type {
             case let .row(rowChangeType):
                 switch rowChangeType {
@@ -25,7 +29,8 @@ public final class TodoItemDataSource: NSObject {
                 case let .insert(indexPath):
                     self?.tableView.insertRows(at: [indexPath], with: .automatic)
                 case let .move(fromIndexPath, toIndexPath):
-                    self?.tableView.moveRow(at: fromIndexPath, to: toIndexPath)
+                    self?.tableView.deleteRows(at: [fromIndexPath], with: .automatic)
+                    self?.tableView.insertRows(at: [toIndexPath], with: .automatic)
                 case let .update(indexPath):
                     self?.tableView.reloadRows(at: [indexPath], with: .automatic)
                 case let .error(error):
@@ -49,9 +54,7 @@ public final class TodoItemDataSource: NSObject {
     }
     
     func addTodoItem(name: String) {
-        guard let sectionIndex = coreDataController.indexForSectionName(name: TodoItemViewModel.Prioroty.medium.sectionName) else {
-            return
-        }
+        let sectionIndex = coreDataController.indexForSectionName(name: TodoItemViewModel.Prioroty.medium.sectionName) ?? 0
         
         let item = TodoItem()
         item.text = name
@@ -138,14 +141,16 @@ extension TodoItemDataSource: UITableViewDataSource {
         let sectionIndex = destinationIndexPath.section
         let indexPaths = (startIndex...endIndex).map{ IndexPath(row: $0, section: sectionIndex) }
         
+        shouldListenDataBaseUpdates = false
         coreDataController.updateModels(indexPaths: indexPaths) { (items) in
-            var mutableItems = items
-            let movingItem = isMovingUp ? mutableItems.removeLast() : mutableItems.removeFirst()
-            movingItem.index = Int32(destinationIndexPath.row)
-            movingItem.priority = coreDataController.nameForSection(at: destinationIndexPath.section)
-            mutableItems.forEach {
+            let movingItem = isMovingUp ? items.last : items.first
+            items.forEach {
                 $0.index += isMovingUp ? 1 : -1
+                $0.priority = coreDataController.nameForSection(at: destinationIndexPath.section)
             }
+            movingItem?.index = Int32(destinationIndexPath.row)
+            movingItem?.priority = coreDataController.nameForSection(at: destinationIndexPath.section)
         }
+        shouldListenDataBaseUpdates = true
     }
 }

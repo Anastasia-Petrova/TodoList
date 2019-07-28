@@ -8,7 +8,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        printCoreDataPath()
         return true
+    }
+    
+    fileprivate func printCoreDataPath() {
+        // Override point for customization after application launch.
+        let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+        print("DOCUMENTS: " + documentsPath)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

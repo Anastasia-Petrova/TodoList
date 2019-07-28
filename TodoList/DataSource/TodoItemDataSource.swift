@@ -54,11 +54,11 @@ public final class TodoItemDataSource: NSObject {
     }
     
     func addTodoItem(name: String) {
-        let sectionIndex = coreDataController.indexForSectionName(name: TodoItemViewModel.Prioroty.medium.sectionName) ?? 0
+        let sectionIndex = coreDataController.indexForSectionName(name: TodoItemViewModel.Prioroty.high.sectionName) ?? 0
         
         let item = TodoItem()
         item.text = name
-        item.priority = TodoItemViewModel.Prioroty.medium.sectionName
+        item.priority = TodoItemViewModel.Prioroty.high.sectionName
         item.index = 0
         
         let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
@@ -73,6 +73,16 @@ public final class TodoItemDataSource: NSObject {
     
     func deleteTodoItems(at indexPaths: [IndexPath]) {
         coreDataController.deleteItems(at: indexPaths)
+        let sections = indexPaths.reduce(Set<Int>()) { $0.union([$1.section]) }
+        for section in sections {
+            let numberOfItems = coreDataController.numberOfItems(in: section)
+            let newIndexPaths = (0..<numberOfItems).map{ IndexPath(row: $0, section: section) }
+            coreDataController.updateModels(indexPaths: newIndexPaths) { (items) in
+                for (index, item) in items.enumerated() {
+                    item.index = Int32(index)
+                }
+            }
+        }
     }
     
     func editItemName(

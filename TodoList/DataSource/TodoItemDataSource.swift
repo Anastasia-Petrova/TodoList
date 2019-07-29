@@ -105,7 +105,7 @@ extension TodoItemDataSource: UITableViewDataSource {
     }
     
     public func numberOfSections(in tableView: UITableView) -> Int {
-        return coreDataController.numberOfSections()
+        return TodoItemViewModel.Prioroty.allCases.count
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -136,12 +136,7 @@ extension TodoItemDataSource: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if let sectionName = coreDataController.nameForSection(at: section) {
-            let title = TodoItemViewModel.Prioroty.init(sectionName: sectionName)
-            return title.rawValue.capitalized
-        } else {
-            return nil
-        }
+        return TodoItemViewModel.Prioroty.allCases[section].rawValue.capitalized
     }
     
     public func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {

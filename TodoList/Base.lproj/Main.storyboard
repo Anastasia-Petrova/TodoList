@@ -13,17 +13,17 @@
         <!--Checklist-->
         <scene sceneID="dHe-8A-hzu">
             <objects>
-                <tableViewController id="HDd-ha-UTb" customClass="TodoListTableViewController" customModule="NewCheckList" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="QjI-eK-ojh">
+                <tableViewController id="HDd-ha-UTb" customClass="TodoListTableViewController" customModule="TodoList" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="QjI-eK-ojh">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TodoItemTableViewCell" rowHeight="50" id="YtW-mR-dzX" customClass="TodoItemTableViewCell" customModule="NewCheckList" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TodoItemTableViewCell" rowHeight="50" id="YtW-mR-dzX" customClass="TodoItemTableViewCell" customModule="TodoList" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="414" height="50"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YtW-mR-dzX" id="L1I-r6-jcS">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="49.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="dRc-2S-Onx">
@@ -89,7 +89,7 @@
         <!--Title-->
         <scene sceneID="4aX-0P-kl3">
             <objects>
-                <tableViewController storyboardIdentifier="AddItemTableViewController" id="yle-iS-bAp" customClass="AddItemTableViewController" customModule="NewCheckList" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="AddItemTableViewController" id="yle-iS-bAp" customClass="AddItemTableViewController" customModule="TodoList" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" id="OFK-ZS-9IG">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

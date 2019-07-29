@@ -30,7 +30,7 @@ extension TodoItemViewModel: CoreDataMappable {
 }
 
 extension TodoItemViewModel {
-    enum Prioroty: String {
+    enum Prioroty: String, CaseIterable {
         case high
         case medium
         case low

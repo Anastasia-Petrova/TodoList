@@ -140,21 +140,88 @@ extension TodoItemDataSource: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let isMovingUp = destinationIndexPath.row < sourceIndexPath.row
-        let startIndex = isMovingUp ? destinationIndexPath.row : sourceIndexPath.row
-        let endIndex = isMovingUp ? sourceIndexPath.row : destinationIndexPath.row
-        let sectionIndex = destinationIndexPath.section
-        let indexPaths = (startIndex...endIndex).map{ IndexPath(row: $0, section: sectionIndex) }
-        
         shouldListenDataBaseUpdates = false
-        coreDataController.updateModels(indexPaths: indexPaths) { (items) in
-            let movingItem = isMovingUp ? items.last : items.first
-            items.forEach {
-                $0.index += isMovingUp ? 1 : -1
-                $0.priority = coreDataController.nameForSection(at: destinationIndexPath.section)
+        let destionationSectionIndex = destinationIndexPath.section
+        if sourceIndexPath.section == destinationIndexPath.section {
+            let isMovingUp = destinationIndexPath.row < sourceIndexPath.row
+            let startIndex = isMovingUp ? destinationIndexPath.row : sourceIndexPath.row
+            let endIndex = isMovingUp ? sourceIndexPath.row : destinationIndexPath.row
+            let sectionIndex = destinationIndexPath.section
+            let indexPaths = (startIndex...endIndex).map{ IndexPath(row: $0, section: sectionIndex) }
+            
+            //All right
+            coreDataController.updateModels(indexPaths: indexPaths) { (items) in
+                let movingItem = isMovingUp ? items.last : items.first
+                items.forEach {
+                    $0.index += isMovingUp ? 1 : -1
+                    $0.priority = coreDataController.nameForSection(at: destinationIndexPath.section)
+                }
+                movingItem?.index = Int32(destinationIndexPath.row)
+                movingItem?.priority = coreDataController.nameForSection(at: destinationIndexPath.section)
             }
-            movingItem?.index = Int32(destinationIndexPath.row)
-            movingItem?.priority = coreDataController.nameForSection(at: destinationIndexPath.section)
+        } else {
+            let numberOfItemsInDestinationSection = coreDataController.numberOfItems(in: destinationIndexPath.section)
+            let numberOfItemsInSourceSection = coreDataController.numberOfItems(in: sourceIndexPath.section)
+            let isEmptyDescinationSection = numberOfItemsInDestinationSection == 0
+            let isLastElementInSourceSection = sourceIndexPath.row == numberOfItemsInSourceSection - 1
+            let indexOfLastElementInDestinationSection = isEmptyDescinationSection ? 0 : numberOfItemsInDestinationSection - 1
+            //Если перемещаем послединй элемент в секции
+            if isLastElementInSourceSection {
+                //Если перемещаем последний элемент на последний ряд секции
+                
+                if destinationIndexPath.row == indexOfLastElementInDestinationSection {
+                    coreDataController.updateModels(indexPaths: [sourceIndexPath]) { (items) in
+                        let movingItem = items.first
+                        movingItem?.priority = coreDataController.nameForSection(at: destionationSectionIndex)
+                        movingItem?.index = Int32(destinationIndexPath.row)
+                    }
+                } else {
+                    //Если перемещаем последний элемент на не последний ряд секции
+                    let sectionIndex = destinationIndexPath.section
+                    let indexPaths = (destinationIndexPath.row...indexOfLastElementInDestinationSection).map{ IndexPath(row: $0, section: sectionIndex) }
+                    coreDataController.updateModels(indexPaths: [sourceIndexPath] + indexPaths) { (items) in
+                        let movingItem = items.first
+                        items.forEach {
+                            $0.index += 1
+                        }
+                        movingItem?.index = Int32(destinationIndexPath.row)
+                        movingItem?.priority = coreDataController.nameForSection(at: destionationSectionIndex)
+                    }
+                }
+            } else {
+                //Если перемещаем не последний элемент на последнее место в секции
+                if destinationIndexPath.row == indexOfLastElementInDestinationSection + 1 {
+                    let endIndexForSourceSection = coreDataController.numberOfItems(in: sourceIndexPath.section) - 1
+                    let sourceSectionIndexPaths = (sourceIndexPath.row...endIndexForSourceSection).map{ IndexPath(row: $0, section: sourceIndexPath.section) }
+                    coreDataController.updateModels(indexPaths: sourceSectionIndexPaths) { (items) in
+                        let movingItem = items.first
+                        items.forEach {
+                            $0.index -= 1
+                        }
+                        movingItem?.index = Int32(destinationIndexPath.row)
+                        movingItem?.priority = coreDataController.nameForSection(at: destionationSectionIndex)
+                    }
+                } else {
+                    //Если перемещаем не последний элемент на не последнее место в секции
+                    let endIndexForSourceSection = coreDataController.numberOfItems(in: sourceIndexPath.section) - 1
+                    let sourceSectionIndexPaths = (sourceIndexPath.row...endIndexForSourceSection).map{ IndexPath(row: $0, section: sourceIndexPath.section) }
+                    let destinationSectionIndexPaths = (destinationIndexPath.row...indexOfLastElementInDestinationSection).map{ IndexPath(row: $0, section: destionationSectionIndex) }
+                    //                обновить индексы и приоритеты всех задействованых элементов
+                    coreDataController.updateModels(indexPaths: destinationSectionIndexPaths) { (items) in
+                        items.forEach {
+                            $0.index += 1
+                        }
+                    }
+                    coreDataController.updateModels(indexPaths: sourceSectionIndexPaths) { (items) in
+                        let movingItem = items.first
+                        items.forEach {
+                            $0.index -= 1
+                        }
+                        movingItem?.index = Int32(destinationIndexPath.row)
+                        movingItem?.priority = coreDataController.nameForSection(at: destionationSectionIndex)
+                    }
+                }
+            }
         }
         shouldListenDataBaseUpdates = true
     }

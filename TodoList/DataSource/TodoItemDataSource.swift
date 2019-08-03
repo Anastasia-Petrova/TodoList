@@ -107,7 +107,15 @@ public final class TodoItemDataSource: NSObject {
 
 extension TodoItemDataSource: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return shouldDisplayAllSections ? TodoItemViewModel.Prioroty.allCases[section].rawValue.capitalized : coreDataController.nameForSection(at: section)
+        if shouldDisplayAllSections {
+            return TodoItemViewModel.Prioroty.allCases[section].rawValue.capitalized
+        } else {
+            var name = ""
+            if let coreSectionName = coreDataController.nameForSection(at: section) {
+                name = TodoItemViewModel.Prioroty(sectionName: coreSectionName).rawValue.capitalized
+            }
+            return name
+        }
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -107,25 +107,42 @@ public final class TodoItemDataSource: NSObject {
 
 extension TodoItemDataSource: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let name =  shouldDisplayAllSections ? TodoItemViewModel.Prioroty.allCases[section].rawValue.capitalized : coreDataController.nameForSection(at: section)
-        return name
+        return shouldDisplayAllSections ? TodoItemViewModel.Prioroty.allCases[section].rawValue.capitalized : coreDataController.nameForSection(at: section)
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return coreDataController.numberOfItems(in: section)
+        if shouldDisplayAllSections {
+            let sectionName = TodoItemViewModel.Prioroty.allCases[section].sectionName
+            if let realSectionIndex = coreDataController.indexForSectionName(name: sectionName) {
+                return coreDataController.numberOfItems(in: realSectionIndex)
+            } else {
+                return 0
+            }
+        } else {
+            return coreDataController.numberOfItems(in: section)
+        }
     }
     
     public func numberOfSections(in tableView: UITableView) -> Int {
-        return shouldDisplayAllSections ? TodoItemViewModel.Prioroty.allCases.count : coreDataController.numberOfSections() 
+        return shouldDisplayAllSections ? TodoItemViewModel.Prioroty.allCases.count : coreDataController.numberOfSections()
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let vm = coreDataController.getItem(at: indexPath)
+        let indexPathForDataBase: IndexPath
+        if shouldDisplayAllSections {
+            let sectionName = TodoItemViewModel.Prioroty.allCases[indexPath.section].sectionName
+            let realSectionIndex = coreDataController.indexForSectionName(name: sectionName)!
+            indexPathForDataBase = IndexPath(row: indexPath.row, section: realSectionIndex)
+        } else {
+            indexPathForDataBase = indexPath
+        }
+        
+        let vm = coreDataController.getItem(at: indexPathForDataBase)
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemTableViewCell", for: indexPath) as! TodoItemTableViewCell
         cell.configure(with: vm)
         cell.editItemCallback = { [weak self] text in
             self?.editItemName(
-                indexPath: indexPath,
+                indexPath: indexPathForDataBase,
                 text: text ?? "",
                 isChecked: vm.isChecked,
                 priority: vm.priority.rawValue
@@ -133,7 +150,7 @@ extension TodoItemDataSource: UITableViewDataSource {
         }
         cell.checkBoxCallback = { [weak self] in
             self?.editItemName(
-                indexPath: indexPath,
+                indexPath: indexPathForDataBase,
                 text: vm.text,
                 isChecked: !vm.isChecked,
                 priority: vm.priority.rawValue
@@ -164,7 +181,7 @@ extension TodoItemDataSource: UITableViewDataSource {
                     $0.priority = coreDataController.nameForSection(at: destinationIndexPath.section)
                 }
                 movingItem?.index = Int32(destinationIndexPath.row)
-                movingItem?.priority = coreDataController.nameForSection(at: destinationIndexPath.section)
+                movingItem?.priority = TodoItemViewModel.Prioroty.allCases[destionationSectionIndex].sectionName
             }
         } else {
             let numberOfItemsInDestinationSection = coreDataController.numberOfItems(in: destinationIndexPath.section)
@@ -194,7 +211,7 @@ extension TodoItemDataSource: UITableViewDataSource {
                     $0.index -= 1
                 }
                 movingItem?.index = Int32(destinationIndexPath.row)
-                movingItem?.priority = coreDataController.nameForSection(at: destionationSectionIndex)
+                movingItem?.priority = TodoItemViewModel.Prioroty.allCases[destionationSectionIndex].sectionName
             }
         }
         shouldListenDataBaseUpdates = true

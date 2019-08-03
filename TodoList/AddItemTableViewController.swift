@@ -27,6 +27,11 @@ class AddItemTableViewController: UITableViewController {
         doneButton.isEnabled = false 
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        textField.becomeFirstResponder()
+    }
+    
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }

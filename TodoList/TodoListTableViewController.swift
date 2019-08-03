@@ -26,6 +26,11 @@ class TodoListTableViewController: UITableViewController {
         tableView.allowsMultipleSelectionDuringEditing = true
         navigationController?.navigationBar.prefersLargeTitles = true
     }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        dataSource.shouldDisplayAllSections = editing
+    }
  
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView.isEditing {

@@ -5,10 +5,16 @@ public final class TodoItemDataSource: NSObject {
     let coreDataController: CoreDataController<TodoItem, TodoItemViewModel>
     let tableView: UITableView
     var shouldListenDataBaseUpdates = true
+    var shouldDisplayAllSections: Bool {
+        didSet{
+            tableView.reloadData()
+        }
+    }
     
     init(tableView: UITableView) {
         coreDataController = CoreDataController<TodoItem, TodoItemViewModel>(entityName: "TodoItem", keyForSort: "index", sectionKey: "priority")
         self.tableView = tableView
+        shouldDisplayAllSections = tableView.isEditing
         super.init()
         tableView.dataSource = self
         coreDataController.beginUpdate = { [weak self] in
@@ -100,12 +106,17 @@ public final class TodoItemDataSource: NSObject {
 }
 
 extension TodoItemDataSource: UITableViewDataSource {
+    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let name =  shouldDisplayAllSections ? TodoItemViewModel.Prioroty.allCases[section].rawValue.capitalized : coreDataController.nameForSection(at: section)
+        return name
+    }
+    
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return coreDataController.numberOfItems(in: section)
     }
     
     public func numberOfSections(in tableView: UITableView) -> Int {
-        return TodoItemViewModel.Prioroty.allCases.count
+        return shouldDisplayAllSections ? TodoItemViewModel.Prioroty.allCases.count : coreDataController.numberOfSections() 
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -133,10 +144,6 @@ extension TodoItemDataSource: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         deleteTodoItems(at: [indexPath])
-    }
-    
-    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return TodoItemViewModel.Prioroty.allCases[section].rawValue.capitalized
     }
     
     public func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
@@ -173,7 +180,9 @@ extension TodoItemDataSource: UITableViewDataSource {
                 destinationUpperBound = indexOfLastElementInDestinationSection
             }
             let destinationSectionIndexPaths = (destinationIndexPath.row...destinationUpperBound).map{ IndexPath(row: $0, section: destionationSectionIndex) }
-            //                обновить индексы и приоритеты всех задействованых элементов
+            
+            print("sourceSectionIndexPaths: \(sourceSectionIndexPaths)")
+            print("destinationSectionIndexPaths: \(destinationSectionIndexPaths)")
             coreDataController.updateModels(indexPaths: destinationSectionIndexPaths) { (items) in
                 items.forEach {
                     $0.index += 1

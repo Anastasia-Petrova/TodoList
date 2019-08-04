@@ -3,6 +3,13 @@ import UIKit
 class TodoListTableViewController: UITableViewController {
     var dataSource: TodoItemDataSource!
     
+    @IBAction func edit(_ button: UIBarButtonItem) {
+        setEditing(!isEditing, animated: true)
+        dataSource.shouldDisplayAllSections = isEditing
+        updateEditButton()
+    }
+    
+    @IBOutlet weak var editButton: UIBarButtonItem!
     @IBAction func deleteFewItems(_ sender: UIBarButtonItem) {
         if let selectedRows = tableView.indexPathsForSelectedRows {
             dataSource.deleteTodoItems(at: selectedRows)
@@ -20,16 +27,11 @@ class TodoListTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateEditButton()
         dataSource = TodoItemDataSource(tableView: self.tableView)
         dataSource.fetch()
-        navigationItem.leftBarButtonItem = editButtonItem
         tableView.allowsMultipleSelectionDuringEditing = true
         navigationController?.navigationBar.prefersLargeTitles = true
-    }
-    
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-        dataSource.shouldDisplayAllSections = editing
     }
  
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -37,5 +39,9 @@ class TodoListTableViewController: UITableViewController {
             return
         }
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    private func updateEditButton() {
+        editButton.title = isEditing ? "Done" : "Edit"
     }
 }

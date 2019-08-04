@@ -27,7 +27,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="dRc-2S-Onx">
-                                            <rect key="frame" x="8" y="8" width="398" height="33.5"/>
+                                            <rect key="frame" x="8" y="8" width="398" height="34"/>
                                             <subviews>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uZd-rJ-Wcf">
                                                     <rect key="frame" x="0.0" y="2" width="360" height="30"/>
@@ -68,6 +68,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Checklist" id="iXF-8F-cgi">
+                        <barButtonItem key="leftBarButtonItem" title="Item" id="2vf-2x-Tc1">
+                            <connections>
+                                <action selector="edit:" destination="HDd-ha-UTb" id="jiO-GH-ixe"/>
+                            </connections>
+                        </barButtonItem>
                         <rightBarButtonItems>
                             <barButtonItem systemItem="add" id="vu5-PE-KJX">
                                 <connections>
@@ -81,6 +86,9 @@
                             </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
+                    <connections>
+                        <outlet property="editButton" destination="2vf-2x-Tc1" id="mnk-ih-qFH"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fJF-yy-5Hb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -60,18 +60,18 @@ public final class TodoItemDataSource: NSObject {
     }
     
     func addTodoItem(name: String) {
-        let sectionIndex = coreDataController.indexForSectionName(name: TodoItemViewModel.Prioroty.high.sectionName) ?? 0
-        
         let item = TodoItem()
         item.text = name
         item.priority = TodoItemViewModel.Prioroty.high.sectionName
         item.index = 0
         
-        let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
-        let indexPaths = (0..<numberOfItems).map{ IndexPath(row: $0, section: sectionIndex) }
-        coreDataController.updateModels(indexPaths: indexPaths) { (items) in
-            items.forEach {
-                $0.index += 1
+        if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemViewModel.Prioroty.high.sectionName) {
+            let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
+            let indexPaths = (0..<numberOfItems).map{ IndexPath(row: $0, section: sectionIndex) }
+            coreDataController.updateModels(indexPaths: indexPaths) { (items) in
+                items.forEach {
+                    $0.index += 1
+                }
             }
         }
         coreDataController.add(model: item)

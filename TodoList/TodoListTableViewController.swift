@@ -3,17 +3,19 @@ import UIKit
 class TodoListTableViewController: UITableViewController {
     var dataSource: TodoItemDataSource!
     
-    @IBAction func edit(_ button: UIBarButtonItem) {
-        setEditing(!isEditing, animated: true)
-        dataSource.shouldDisplayAllSections = isEditing
-        updateEditButton()
-    }
-    
+    @IBOutlet weak var deleteButton: UIBarButtonItem!
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBAction func deleteFewItems(_ sender: UIBarButtonItem) {
         if let selectedRows = tableView.indexPathsForSelectedRows {
             dataSource.deleteTodoItems(at: selectedRows)
         }
+    }
+    
+    @IBAction func edit(_ button: UIBarButtonItem) {
+        setEditing(!isEditing, animated: true)
+        dataSource.shouldDisplayAllSections = isEditing
+        updateEditButton()
+        updateDeleteButtonState()
     }
     
     @IBAction func addItem(_ sender: UIBarButtonItem) {
@@ -26,6 +28,7 @@ class TodoListTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         updateEditButton()
+        deleteButton.isEnabled = false
         dataSource = TodoItemDataSource(tableView: self.tableView)
         dataSource.fetch()
         tableView.allowsMultipleSelectionDuringEditing = true
@@ -33,10 +36,19 @@ class TodoListTableViewController: UITableViewController {
     }
  
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if tableView.isEditing {
-            return
+        if !tableView.isEditing {
+            tableView.deselectRow(at: indexPath, animated: true)
         }
-        tableView.deselectRow(at: indexPath, animated: true)
+        updateDeleteButtonState()
+    }
+    
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        updateDeleteButtonState()
+    }
+    
+    private func updateDeleteButtonState() {
+        let selectedRows = tableView.indexPathsForSelectedRows?.count ?? 0
+        deleteButton.isEnabled = tableView.isEditing && selectedRows > 0
     }
     
     private func updateEditButton() {

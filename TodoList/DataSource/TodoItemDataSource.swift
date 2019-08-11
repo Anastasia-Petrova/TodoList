@@ -62,10 +62,10 @@ public final class TodoItemDataSource: NSObject {
     func addTodoItem(name: String) {
         let item = TodoItem()
         item.text = name
-        item.priority = TodoItemViewModel.Prioroty.high.sectionName
+        item.priority = TodoItemPriority.high.sectionName
         item.index = 0
         
-        if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemViewModel.Prioroty.high.sectionName) {
+        if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemPriority.high.sectionName) {
             let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
             let indexPaths = (0..<numberOfItems).map{ IndexPath(row: $0, section: sectionIndex) }
             coreDataController.updateModels(indexPaths: indexPaths) { (items) in
@@ -108,11 +108,11 @@ public final class TodoItemDataSource: NSObject {
 extension TodoItemDataSource: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if shouldDisplayAllSections {
-            return TodoItemViewModel.Prioroty.allCases[section].rawValue.capitalized
+            return TodoItemPriority.allCases[section].rawValue.capitalized
         } else {
             var name = ""
             if let coreSectionName = coreDataController.nameForSection(at: section) {
-                name = TodoItemViewModel.Prioroty(sectionName: coreSectionName).rawValue.capitalized
+                name = TodoItemPriority(sectionName: coreSectionName).rawValue.capitalized
             }
             return name
         }
@@ -120,7 +120,7 @@ extension TodoItemDataSource: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if shouldDisplayAllSections {
-            let sectionName = TodoItemViewModel.Prioroty.allCases[section].sectionName
+            let sectionName = TodoItemPriority.allCases[section].sectionName
             if let realSectionIndex = coreDataController.indexForSectionName(name: sectionName) {
                 return coreDataController.numberOfItems(in: realSectionIndex)
             } else {
@@ -132,13 +132,13 @@ extension TodoItemDataSource: UITableViewDataSource {
     }
     
     public func numberOfSections(in tableView: UITableView) -> Int {
-        return shouldDisplayAllSections ? TodoItemViewModel.Prioroty.allCases.count : coreDataController.numberOfSections()
+        return shouldDisplayAllSections ? TodoItemPriority.allCases.count : coreDataController.numberOfSections()
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let indexPathForDataBase: IndexPath
         if shouldDisplayAllSections {
-            let sectionName = TodoItemViewModel.Prioroty.allCases[indexPath.section].sectionName
+            let sectionName = TodoItemPriority.allCases[indexPath.section].sectionName
             let realSectionIndex = coreDataController.indexForSectionName(name: sectionName)!
             indexPathForDataBase = IndexPath(row: indexPath.row, section: realSectionIndex)
         } else {
@@ -189,7 +189,7 @@ extension TodoItemDataSource: UITableViewDataSource {
                     $0.priority = coreDataController.nameForSection(at: destinationIndexPath.section)
                 }
                 movingItem?.index = Int32(destinationIndexPath.row)
-                movingItem?.priority = TodoItemViewModel.Prioroty.allCases[destionationSectionIndex].sectionName
+                movingItem?.priority = TodoItemPriority.allCases[destionationSectionIndex].sectionName
             }
         } else {
             let numberOfItemsInDestinationSection = coreDataController.numberOfItems(in: destinationIndexPath.section)
@@ -219,7 +219,7 @@ extension TodoItemDataSource: UITableViewDataSource {
                     $0.index -= 1
                 }
                 movingItem?.index = Int32(destinationIndexPath.row)
-                movingItem?.priority = TodoItemViewModel.Prioroty.allCases[destionationSectionIndex].sectionName
+                movingItem?.priority = TodoItemPriority.allCases[destionationSectionIndex].sectionName
             }
         }
         shouldListenDataBaseUpdates = true

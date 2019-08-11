@@ -5,6 +5,7 @@ class AddItemTableViewController: UITableViewController {
     let doneButton: UIBarButtonItem
     let cancelButton: UIBarButtonItem
     let textField: UITextField
+    let prioritySegmentedControl: UISegmentedControl
     var editingItemName = ""
     
     @objc func done() {
@@ -26,16 +27,9 @@ class AddItemTableViewController: UITableViewController {
         textField.font = .systemFont(ofSize: 24, weight: .light)
         doneButton = UIBarButtonItem()
         cancelButton = UIBarButtonItem()
+        prioritySegmentedControl = UISegmentedControl(items: TodoItemPriority.allCases.map { $0.rawValue.capitalized })
         super.init(style: .grouped)
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        doneButton.title = "Done"
-        doneButton.style = .done
-        doneButton.target = self
-        doneButton.action = #selector(done)
-        cancelButton.title = "Cancel"
-        cancelButton.style = .plain
-        cancelButton.target = self
-        cancelButton.action = #selector(cancel)
+        setUpSubviews()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -51,6 +45,19 @@ class AddItemTableViewController: UITableViewController {
         doneButton.isEnabled = false
     }
 
+    private func setUpSubviews() {
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        prioritySegmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        doneButton.title = "Done"
+        doneButton.style = .done
+        doneButton.target = self
+        doneButton.action = #selector(done)
+        cancelButton.title = "Cancel"
+        cancelButton.style = .plain
+        cancelButton.target = self
+        cancelButton.action = #selector(cancel)
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         textField.becomeFirstResponder()
@@ -60,20 +67,41 @@ class AddItemTableViewController: UITableViewController {
         return 44.0
     }
     
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 0 {
+            return createNameCell()
+        } else {
+            return createPriorityCell()
+        }
+    }
+    
+    private func createNameCell() -> UITableViewCell {
         let cell = UITableViewCell()
         cell.addSubview(textField)
         NSLayoutConstraint.activate([
-            textField.topAnchor.constraint(equalTo: cell.topAnchor),
-            textField.bottomAnchor.constraint(equalTo: cell.bottomAnchor),
-            textField.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: 16),
-            textField.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 16)
-        ])
+            cell.topAnchor.constraint(equalTo: textField.topAnchor),
+            cell.bottomAnchor.constraint(equalTo: textField.bottomAnchor),
+            cell.trailingAnchor.constraint(equalTo: textField.trailingAnchor, constant: 16),
+            cell.leadingAnchor.constraint(equalTo: textField.leadingAnchor, constant: -16)
+            ])
+        return cell
+    }
+    
+    private func createPriorityCell() -> UITableViewCell {
+        let cell = UITableViewCell()
+        cell.addSubview(prioritySegmentedControl)
+        NSLayoutConstraint.activate([
+            cell.topAnchor.constraint(equalTo: prioritySegmentedControl.topAnchor),
+            cell.bottomAnchor.constraint(equalTo: prioritySegmentedControl.bottomAnchor),
+            cell.trailingAnchor.constraint(equalTo: prioritySegmentedControl.trailingAnchor, constant: 16),
+            cell.leadingAnchor.constraint(equalTo: prioritySegmentedControl.leadingAnchor, constant: -16)
+            ])
         return cell
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6D098DE02300A1A2009AD73D /* TodoItemPriority.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D098DDF2300A1A2009AD73D /* TodoItemPriority.swift */; };
 		6D832F8122E482AD00C0EEDE /* EasyCoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D832F8022E482AD00C0EEDE /* EasyCoreData.framework */; };
 		6D832F8222E482AD00C0EEDE /* EasyCoreData.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6D832F8022E482AD00C0EEDE /* EasyCoreData.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6DDAA94622D795B3007017BB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DDAA94522D795B3007017BB /* AppDelegate.swift */; };
@@ -47,6 +48,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6D098DDF2300A1A2009AD73D /* TodoItemPriority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItemPriority.swift; sourceTree = "<group>"; };
 		6D832F8022E482AD00C0EEDE /* EasyCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EasyCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DDAA94222D795B3007017BB /* TodoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TodoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DDAA94522D795B3007017BB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				6DDAA97122D7B7DF007017BB /* AddItemTableViewController.swift */,
 				6DDAA96D22D797B4007017BB /* TodoListTableViewController.swift */,
 				6DDAA96F22D797DE007017BB /* TodoItemTableViewCell.swift */,
+				6D098DDF2300A1A2009AD73D /* TodoItemPriority.swift */,
 				6DDAA94922D795B3007017BB /* Main.storyboard */,
 				6DDAA94F22D795B4007017BB /* Assets.xcassets */,
 				6DDAA95422D795B4007017BB /* Info.plist */,
@@ -246,6 +249,7 @@
 				6DDAA97822D9F578007017BB /* TodoItemDataSource.swift in Sources */,
 				6DDAA98022DBCA1E007017BB /* TodoItem+Init.swift in Sources */,
 				6DDAA94622D795B3007017BB /* AppDelegate.swift in Sources */,
+				6D098DE02300A1A2009AD73D /* TodoItemPriority.swift in Sources */,
 				6DDAA96E22D797B4007017BB /* TodoListTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

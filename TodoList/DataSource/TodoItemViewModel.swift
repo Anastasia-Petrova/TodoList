@@ -3,7 +3,7 @@ import EasyCoreData
 struct TodoItemViewModel  {
     let text: String
     let isChecked: Bool
-    let priority: Prioroty
+    let priority: TodoItemPriority
     let index: Int
 }
 
@@ -19,9 +19,9 @@ extension TodoItemViewModel: CoreDataMappable {
     init(model: TodoItem) {
         text = model.text ?? ""
         isChecked = model.isChecked
-        let defaultPriority = Prioroty.medium
+        let defaultPriority = TodoItemPriority.medium
         if let priorityString = model.priority {
-            priority = Prioroty(sectionName: priorityString)
+            priority = TodoItemPriority(sectionName: priorityString)
         } else {
             priority = defaultPriority
         }
@@ -29,34 +29,3 @@ extension TodoItemViewModel: CoreDataMappable {
     }
 }
 
-extension TodoItemViewModel {
-    enum Prioroty: String, CaseIterable {
-        case high
-        case medium
-        case low
-        
-        var sectionName: String {
-            switch self {
-            case .high:
-                return "a"
-            case .medium:
-                return "b"
-            case .low:
-                return "c"
-            }
-        }
-        
-        init(sectionName: String) {
-            switch sectionName {
-            case "a":
-                self = .high
-            case "b":
-                self = .medium
-            case "c":
-                self = .low
-            default:
-                self = .medium
-            }
-        }
-    }
-}

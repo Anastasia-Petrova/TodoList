@@ -17,9 +17,7 @@ class TodoListTableViewController: UITableViewController {
     }
     
     @IBAction func addItem(_ sender: UIBarButtonItem) {
-        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
-        let aivc = storyboard.instantiateViewController(withIdentifier: "AddItemTableViewController") as! AddItemTableViewController
-        aivc.addItemCallback = { [weak self] (name) in
+        let aivc = AddItemTableViewController { [weak self] (name) in
             self?.dataSource.addTodoItem(name: name)
         }
         self.navigationController?.pushViewController(aivc, animated: true)

@@ -2,34 +2,60 @@ import UIKit
 
 class AddItemTableViewController: UITableViewController {
     typealias AddItemCallback = (String) -> Void
-    @IBOutlet weak var textField: UITextField!
+    let doneButton: UIBarButtonItem
+    let cancelButton: UIBarButtonItem
+    let textField: UITextField
     var editingItemName = ""
     
-    @IBAction func done(_ sender: UIBarButtonItem) {
+    @objc func done() {
         self.navigationController?.popViewController(animated: true)
         if let newName = textField.text {
-            addItemCallback?(newName)
+            addItemCallback(newName)
         }
     }
     
-    @IBAction func cancel(_ sender: UIBarButtonItem) {
+    @objc func cancel() {
         self.navigationController?.popViewController(animated: true)
     }
     
-    @IBOutlet weak var doneButton: UIBarButtonItem!
+    var addItemCallback: AddItemCallback
     
-    var addItemCallback: AddItemCallback?
+    init(addItemCallBack: @escaping AddItemCallback) {
+        self.addItemCallback = addItemCallBack
+        textField = UITextField()
+        doneButton = UIBarButtonItem()
+        cancelButton = UIBarButtonItem()
+        super.init(style: .grouped)
+        doneButton.title = "Done"
+        doneButton.style = .done
+        doneButton.target = self
+        doneButton.action = #selector(done)
+        cancelButton.title = "Cancel"
+        cancelButton.style = .plain
+        cancelButton.target = self
+        cancelButton.action = #selector(cancel)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         textField.delegate = self
         textField.text = editingItemName
-        doneButton.isEnabled = false 
+        navigationItem.leftBarButtonItem = cancelButton
+        navigationItem.rightBarButtonItem = doneButton
+        doneButton.isEnabled = false
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         textField.becomeFirstResponder()
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {

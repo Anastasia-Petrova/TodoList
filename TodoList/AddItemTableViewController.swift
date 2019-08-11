@@ -47,6 +47,7 @@ class AddItemTableViewController: UITableViewController {
 
     private func setUpSubviews() {
         textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.placeholder = "What's on your mind?"
         prioritySegmentedControl.translatesAutoresizingMaskIntoConstraints = false
         doneButton.title = "Done"
         doneButton.style = .done
@@ -74,6 +75,13 @@ class AddItemTableViewController: UITableViewController {
         } else {
             return createPriorityCell()
         }
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 1 {
+            return "Choose priority"
+        }
+        return nil
     }
     
     private func createNameCell() -> UITableViewCell {

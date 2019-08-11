@@ -23,9 +23,11 @@ class AddItemTableViewController: UITableViewController {
     init(addItemCallBack: @escaping AddItemCallback) {
         self.addItemCallback = addItemCallBack
         textField = UITextField()
+        textField.font = .systemFont(ofSize: 24, weight: .light)
         doneButton = UIBarButtonItem()
         cancelButton = UIBarButtonItem()
         super.init(style: .grouped)
+        textField.translatesAutoresizingMaskIntoConstraints = false
         doneButton.title = "Done"
         doneButton.style = .done
         doneButton.target = self
@@ -54,8 +56,20 @@ class AddItemTableViewController: UITableViewController {
         textField.becomeFirstResponder()
     }
     
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 44.0
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        let cell = UITableViewCell()
+        cell.addSubview(textField)
+        NSLayoutConstraint.activate([
+            textField.topAnchor.constraint(equalTo: cell.topAnchor),
+            textField.bottomAnchor.constraint(equalTo: cell.bottomAnchor),
+            textField.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: 16),
+            textField.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 16)
+        ])
+        return cell
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {

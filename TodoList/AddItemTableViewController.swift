@@ -1,7 +1,7 @@
 import UIKit
 
 class AddItemTableViewController: UITableViewController {
-    typealias AddItemCallback = (String) -> Void
+    typealias AddItemCallback = (String, Int) -> Void
     let doneButton: UIBarButtonItem
     let cancelButton: UIBarButtonItem
     let textField: UITextField
@@ -11,7 +11,8 @@ class AddItemTableViewController: UITableViewController {
     @objc func done() {
         self.navigationController?.popViewController(animated: true)
         if let newName = textField.text {
-            addItemCallback(newName)
+            let priorityIndex = prioritySegmentedControl.selectedSegmentIndex
+            addItemCallback(newName, priorityIndex)
         }
     }
     
@@ -49,6 +50,7 @@ class AddItemTableViewController: UITableViewController {
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "What's on your mind?"
         prioritySegmentedControl.translatesAutoresizingMaskIntoConstraints = false
+//        prioritySegmentedControl.addTarget(self, action: <#T##Selector#>, for: .valueChanged)
         doneButton.title = "Done"
         doneButton.style = .done
         doneButton.target = self

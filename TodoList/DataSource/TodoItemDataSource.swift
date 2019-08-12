@@ -59,13 +59,13 @@ public final class TodoItemDataSource: NSObject {
         coreDataController.fetch()
     }
     
-    func addTodoItem(name: String) {
+    func addTodoItem(name: String, prioritIndex: Int) {
         let item = TodoItem()
         item.text = name
-        item.priority = TodoItemPriority.high.sectionName
+        item.priority = TodoItemPriority.allCases[prioritIndex].sectionName
         item.index = 0
         
-        if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemPriority.high.sectionName) {
+        if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemPriority.allCases[prioritIndex].sectionName) {
             let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
             let indexPaths = (0..<numberOfItems).map{ IndexPath(row: $0, section: sectionIndex) }
             coreDataController.updateModels(indexPaths: indexPaths) { (items) in

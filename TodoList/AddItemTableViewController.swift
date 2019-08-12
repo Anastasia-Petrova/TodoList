@@ -50,7 +50,7 @@ class AddItemTableViewController: UITableViewController {
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "What's on your mind?"
         prioritySegmentedControl.translatesAutoresizingMaskIntoConstraints = false
-//        prioritySegmentedControl.addTarget(self, action: <#T##Selector#>, for: .valueChanged)
+        prioritySegmentedControl.selectedSegmentIndex = 1
         doneButton.title = "Done"
         doneButton.style = .done
         doneButton.target = self

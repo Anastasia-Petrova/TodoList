@@ -30,6 +30,7 @@ class AddItemTableViewController: UITableViewController {
         cancelButton = UIBarButtonItem()
         prioritySegmentedControl = UISegmentedControl(items: TodoItemPriority.allCases.map { $0.rawValue.capitalized })
         super.init(style: .grouped)
+        self.title = "Add New Todo"
         setUpSubviews()
     }
     

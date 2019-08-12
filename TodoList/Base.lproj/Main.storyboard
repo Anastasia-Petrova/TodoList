@@ -30,9 +30,9 @@
                                             <rect key="frame" x="8" y="8" width="398" height="34"/>
                                             <subviews>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uZd-rJ-Wcf">
-                                                    <rect key="frame" x="0.0" y="2" width="360" height="30"/>
+                                                    <rect key="frame" x="0.0" y="2.5" width="360" height="29"/>
                                                     <nil key="textColor"/>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="24"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
                                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dno-N3-huD">
@@ -67,7 +67,7 @@
                             <outlet property="delegate" destination="HDd-ha-UTb" id="0Us-0M-hmG"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Checklist" id="iXF-8F-cgi">
+                    <navigationItem key="navigationItem" title="Checklist" largeTitleDisplayMode="never" id="iXF-8F-cgi">
                         <barButtonItem key="leftBarButtonItem" title="Item" id="2vf-2x-Tc1">
                             <connections>
                                 <action selector="edit:" destination="HDd-ha-UTb" id="jiO-GH-ixe"/>

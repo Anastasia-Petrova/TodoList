@@ -92,15 +92,17 @@ public final class TodoItemDataSource: NSObject {
     }
     
     func editItemName(
-        indexPath: IndexPath,
+        url: URL,
         text: String,
         isChecked: Bool,
-        priority: String
+        priority: TodoItemPriority
         ) {
-        coreDataController.updateModels(indexPaths: [indexPath]) { (todoItems) in
+        print("priority:  \(priority), url: \(url) isChecked: \(isChecked), text: \(text)")
+        
+        coreDataController.updateModels(urls: [url]) { (todoItems) in
             todoItems.first?.text = text
             todoItems.first?.isChecked = isChecked
-            todoItems.first?.priority = priority
+            todoItems.first?.priority = priority.sectionName
         }
     }
 }
@@ -147,21 +149,22 @@ extension TodoItemDataSource: UITableViewDataSource {
         
         let vm = coreDataController.getItem(at: indexPathForDataBase)
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemTableViewCell", for: indexPath) as! TodoItemTableViewCell
+        let url = vm.url
         cell.configure(with: vm)
         cell.editItemCallback = { [weak self] text in
             self?.editItemName(
-                indexPath: indexPathForDataBase,
+                url: url,
                 text: text ?? "",
                 isChecked: vm.isChecked,
-                priority: vm.priority.rawValue
+                priority: vm.priority
             )
         }
         cell.checkBoxCallback = { [weak self] in
             self?.editItemName(
-                indexPath: indexPathForDataBase,
+                url: url,
                 text: vm.text,
                 isChecked: !vm.isChecked,
-                priority: vm.priority.rawValue
+                priority: vm.priority
             )
         }
         return cell

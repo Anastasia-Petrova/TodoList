@@ -1,6 +1,7 @@
 import EasyCoreData
 
 struct TodoItemViewModel  {
+    let url: URL
     let text: String
     let isChecked: Bool
     let priority: TodoItemPriority
@@ -26,6 +27,7 @@ extension TodoItemViewModel: CoreDataMappable {
             priority = defaultPriority
         }
         index = Int(model.index)
+        url = model.objectID.uriRepresentation()
     }
 }
 

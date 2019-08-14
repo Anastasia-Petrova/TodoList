@@ -6,6 +6,7 @@ struct TodoItemViewModel  {
     let isChecked: Bool
     let priority: TodoItemPriority
     let index: Int
+    let isSaved: Bool
 }
 
 extension TodoItemViewModel {
@@ -18,6 +19,8 @@ extension TodoItemViewModel: CoreDataMappable {
     typealias CoreDataModel = TodoItem
     
     init(model: TodoItem) {
+        url = model.objectID.uriRepresentation()
+        isSaved = !model.objectID.isTemporaryID
         text = model.text ?? ""
         isChecked = model.isChecked
         let defaultPriority = TodoItemPriority.medium
@@ -27,7 +30,6 @@ extension TodoItemViewModel: CoreDataMappable {
             priority = defaultPriority
         }
         index = Int(model.index)
-        url = model.objectID.uriRepresentation()
     }
 }
 

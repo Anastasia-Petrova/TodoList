@@ -64,6 +64,7 @@ public final class TodoItemDataSource: NSObject {
         item.text = name
         item.priority = TodoItemPriority.allCases[prioritIndex].sectionName
         item.index = 0
+        item.isChecked = false
         
         if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemPriority.allCases[prioritIndex].sectionName) {
             let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
@@ -91,7 +92,7 @@ public final class TodoItemDataSource: NSObject {
         }
     }
     
-    func editItemName(
+    func updateItem(
         url: URL,
         text: String,
         isChecked: Bool,
@@ -100,6 +101,17 @@ public final class TodoItemDataSource: NSObject {
         print("priority:  \(priority), url: \(url) isChecked: \(isChecked), text: \(text)")
         
         coreDataController.updateModels(urls: [url]) { (todoItems) in
+            todoItems.first?.text = text
+            todoItems.first?.isChecked = isChecked
+            todoItems.first?.priority = priority.sectionName
+        }
+    }
+    
+    func updatedUnsavedItem(indexPath: IndexPath,
+                            text: String,
+                            isChecked: Bool,
+                            priority: TodoItemPriority) {
+        coreDataController.updateModels(indexPaths: [indexPath]) { (todoItems) in
             todoItems.first?.text = text
             todoItems.first?.isChecked = isChecked
             todoItems.first?.priority = priority.sectionName
@@ -150,23 +162,35 @@ extension TodoItemDataSource: UITableViewDataSource {
         let vm = coreDataController.getItem(at: indexPathForDataBase)
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemTableViewCell", for: indexPath) as! TodoItemTableViewCell
         let url = vm.url
+        cell.backgroundColor = vm.isSaved ? .white : .red
         cell.configure(with: vm)
         cell.editItemCallback = { [weak self] text in
-            self?.editItemName(
+            self?.updateItem(
                 url: url,
                 text: text ?? "",
                 isChecked: vm.isChecked,
                 priority: vm.priority
             )
         }
+        if !vm.isSaved {
+            cell.checkBoxCallback = { [weak self] in
+              self?.updatedUnsavedItem(
+                indexPath: indexPathForDataBase,
+                text: vm.text,
+                isChecked: !vm.isChecked,
+                priority: vm.priority)
+            }
+        } else {
         cell.checkBoxCallback = { [weak self] in
-            self?.editItemName(
+            self?.updateItem(
                 url: url,
                 text: vm.text,
                 isChecked: !vm.isChecked,
                 priority: vm.priority
             )
+            }
         }
+        
         return cell
     }
     

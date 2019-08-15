@@ -65,17 +65,17 @@ public final class TodoItemDataSource: NSObject {
         item.priority = TodoItemPriority.allCases[prioritIndex].sectionName
         item.index = 0
         item.isChecked = false
+        coreDataController.add(model: item)
         
         if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemPriority.allCases[prioritIndex].sectionName) {
             let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
-            let indexPaths = (0..<numberOfItems).map{ IndexPath(row: $0, section: sectionIndex) }
+            let indexPaths = (1..<numberOfItems).map{ IndexPath(row: $0, section: sectionIndex) }
             coreDataController.updateModels(indexPaths: indexPaths) { (items) in
                 items.forEach {
                     $0.index += 1
                 }
             }
         }
-        coreDataController.add(model: item)
     }
     
     func deleteTodoItems(at indexPaths: [IndexPath]) {
@@ -92,22 +92,7 @@ public final class TodoItemDataSource: NSObject {
         }
     }
     
-    func updateItem(
-        url: URL,
-        text: String,
-        isChecked: Bool,
-        priority: TodoItemPriority
-        ) {
-        print("priority:  \(priority), url: \(url) isChecked: \(isChecked), text: \(text)")
-        
-        coreDataController.updateModels(urls: [url]) { (todoItems) in
-            todoItems.first?.text = text
-            todoItems.first?.isChecked = isChecked
-            todoItems.first?.priority = priority.sectionName
-        }
-    }
-    
-    func updatedUnsavedItem(indexPath: IndexPath,
+    func updateItem(indexPath: IndexPath,
                             text: String,
                             isChecked: Bool,
                             priority: TodoItemPriority) {
@@ -161,36 +146,22 @@ extension TodoItemDataSource: UITableViewDataSource {
         
         let vm = coreDataController.getItem(at: indexPathForDataBase)
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemTableViewCell", for: indexPath) as! TodoItemTableViewCell
-        let url = vm.url
-        cell.backgroundColor = vm.isSaved ? .white : .red
         cell.configure(with: vm)
         cell.editItemCallback = { [weak self] text in
             self?.updateItem(
-                url: url,
+                indexPath: indexPathForDataBase,
                 text: text ?? "",
                 isChecked: vm.isChecked,
                 priority: vm.priority
             )
         }
-        if !vm.isSaved {
             cell.checkBoxCallback = { [weak self] in
-              self?.updatedUnsavedItem(
+              self?.updateItem(
                 indexPath: indexPathForDataBase,
                 text: vm.text,
                 isChecked: !vm.isChecked,
                 priority: vm.priority)
             }
-        } else {
-        cell.checkBoxCallback = { [weak self] in
-            self?.updateItem(
-                url: url,
-                text: vm.text,
-                isChecked: !vm.isChecked,
-                priority: vm.priority
-            )
-            }
-        }
-        
         return cell
     }
     

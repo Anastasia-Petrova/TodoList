@@ -96,11 +96,16 @@ public final class TodoItemDataSource: NSObject {
         let vm = coreDataController.getItem(at: indexPath)
         let isChecked = !vm.isChecked
         let priority: TodoItemPriority = isChecked ? .done : .medium
-        updateItem(
-            indexPath: indexPath,
-            text: vm.text,
-            isChecked: isChecked,
-            priority: priority)
+//        updateItem(
+//            indexPath: indexPath,
+//            text: vm.text,
+//            isChecked: isChecked,
+//            priority: priority)
+        coreDataController.updateModels(indexPaths: [indexPath]) { (todoItems) in
+            todoItems.first?.index = 0
+            todoItems.first?.isChecked = isChecked
+            todoItems.first?.priority = priority.sectionName
+        }
     }
     
     func updateItem(indexPath: IndexPath,
@@ -158,9 +163,6 @@ extension TodoItemDataSource: UITableViewDataSource {
         let vm = coreDataController.getItem(at: indexPathForDataBase)
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemTableViewCell", for: indexPath) as! TodoItemTableViewCell
         cell.configure(with: vm)
-//        if vm.isChecked {
-//            cell.backgroundColor = UIColor.lightGray
-//        }
         cell.editItemCallback = { [weak self] text in
             self?.updateItem(
                 indexPath: indexPathForDataBase,

@@ -28,6 +28,8 @@ class TodoItemTableViewCell: UITableViewCell {
             attributeString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 2, range: NSMakeRange(0, attributeString.length))
             textField.attributedText = attributeString
             self.backgroundColor = UIColor.lightGray
+        } else {
+            self.backgroundColor = UIColor.white
         }
     }
 }

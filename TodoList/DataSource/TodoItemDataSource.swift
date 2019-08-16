@@ -59,7 +59,9 @@ public final class TodoItemDataSource: NSObject {
         coreDataController.fetch()
     }
     
-    
+    func canPerfornCheckAction(indexPath: IndexPath) -> Bool {
+        return coreDataController.nameForSection(at: indexPath.section) != TodoItemPriority.done.sectionName
+    }
     
     func addTodoItem(name: String, prioritIndex: Int) {
         let item = TodoItem()

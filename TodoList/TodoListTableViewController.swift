@@ -56,6 +56,9 @@ class TodoListTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard dataSource.canPerfornCheckAction(indexPath: indexPath) else {
+            return nil
+        }
         let contextItem = UIContextualAction(style: .normal, title: "Done") { [weak self] (_, _, hasPerformedAction) in
             self?.dataSource.done(at: indexPath)
             hasPerformedAction(true)

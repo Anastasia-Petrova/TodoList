@@ -59,6 +59,8 @@ public final class TodoItemDataSource: NSObject {
         coreDataController.fetch()
     }
     
+    
+    
     func addTodoItem(name: String, prioritIndex: Int) {
         let item = TodoItem()
         item.text = name
@@ -93,18 +95,10 @@ public final class TodoItemDataSource: NSObject {
     }
     
     func done(at indexPath: IndexPath) {
-        let vm = coreDataController.getItem(at: indexPath)
-        let isChecked = !vm.isChecked
-        let priority: TodoItemPriority = isChecked ? .done : .medium
-//        updateItem(
-//            indexPath: indexPath,
-//            text: vm.text,
-//            isChecked: isChecked,
-//            priority: priority)
         coreDataController.updateModels(indexPaths: [indexPath]) { (todoItems) in
             todoItems.first?.index = 0
-            todoItems.first?.isChecked = isChecked
-            todoItems.first?.priority = priority.sectionName
+            todoItems.first?.isChecked = true
+            todoItems.first?.priority = TodoItemPriority.done.sectionName
         }
     }
     
@@ -227,6 +221,11 @@ extension TodoItemDataSource: UITableViewDataSource {
                 }
                 movingItem?.index = Int32(destinationIndexPath.row)
                 movingItem?.priority = TodoItemPriority.allCases[destionationSectionIndex].sectionName
+                if TodoItemPriority.allCases[destionationSectionIndex] == TodoItemPriority.done {
+                    movingItem?.isChecked = true
+                } else {
+                    movingItem?.isChecked = false
+                }
             }
         }
         shouldListenDataBaseUpdates = true

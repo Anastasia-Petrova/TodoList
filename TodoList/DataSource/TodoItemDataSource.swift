@@ -158,7 +158,7 @@ extension TodoItemDataSource: UITableViewDataSource {
         
         let vm = coreDataController.getItem(at: indexPathForDataBase)
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemTableViewCell", for: indexPath) as! TodoItemTableViewCell
-        cell.configure(with: vm)
+        cell.configure(with: vm, shouldAllowEditingText: !shouldDisplayAllSections)
         cell.editItemCallback = { [weak self] text in
             self?.updateItem(
                 indexPath: indexPathForDataBase,

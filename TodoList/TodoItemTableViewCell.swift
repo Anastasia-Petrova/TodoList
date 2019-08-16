@@ -9,6 +9,7 @@ class TodoItemTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         textField.text = ""
+        self.backgroundColor = UIColor.white
     }
     
     override func awakeFromNib() {
@@ -21,15 +22,14 @@ class TodoItemTableViewCell: UITableViewCell {
 
     }
     
-    func configure(with viewModel: TodoItemViewModel) {
+    func configure(with viewModel: TodoItemViewModel, shouldAllowEditingText: Bool) {
         textField.text = viewModel.text
+        textField.isUserInteractionEnabled = shouldAllowEditingText
         if viewModel.isChecked {
             let attributeString: NSMutableAttributedString =  NSMutableAttributedString(string: textField.text!)
             attributeString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 2, range: NSMakeRange(0, attributeString.length))
             textField.attributedText = attributeString
             self.backgroundColor = UIColor.lightGray
-        } else {
-            self.backgroundColor = UIColor.white
         }
     }
 }

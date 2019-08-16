@@ -158,9 +158,9 @@ extension TodoItemDataSource: UITableViewDataSource {
         let vm = coreDataController.getItem(at: indexPathForDataBase)
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemTableViewCell", for: indexPath) as! TodoItemTableViewCell
         cell.configure(with: vm)
-        if vm.isChecked {
-            cell.backgroundColor = UIColor.lightGray
-        }
+//        if vm.isChecked {
+//            cell.backgroundColor = UIColor.lightGray
+//        }
         cell.editItemCallback = { [weak self] text in
             self?.updateItem(
                 indexPath: indexPathForDataBase,

@@ -33,6 +33,11 @@ class TodoItemTableViewCell: UITableViewCell {
     func configure(with viewModel: TodoItemViewModel) {
         textField.text = viewModel.text
         checkMark.setImage(UIImage(named: viewModel.checkBoxIconName), for: .normal)
+        if viewModel.isChecked {
+            let attributeString: NSMutableAttributedString =  NSMutableAttributedString(string: textField.text!)
+            attributeString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 2, range: NSMakeRange(0, attributeString.length))
+            textField.attributedText = attributeString
+        }
     }
 }
 

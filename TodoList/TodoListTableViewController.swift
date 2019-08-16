@@ -54,4 +54,14 @@ class TodoListTableViewController: UITableViewController {
     private func updateEditButton() {
         editButton.title = isEditing ? "Done" : "Edit"
     }
+    
+    override func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let contextItem = UIContextualAction(style: .normal, title: "Done") { [weak self] (_, _, hasPerformedAction) in
+            self?.dataSource.done(at: indexPath)
+            hasPerformedAction(true)
+        }
+        contextItem.backgroundColor = UIColor.blue
+        let swipeActions = UISwipeActionsConfiguration(actions: [contextItem])
+        return swipeActions
+    }
 }

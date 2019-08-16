@@ -92,6 +92,15 @@ public final class TodoItemDataSource: NSObject {
         }
     }
     
+    func done(at indexPath: IndexPath) {
+        let vm = coreDataController.getItem(at: indexPath)
+        updateItem(
+            indexPath: indexPath,
+            text: vm.text,
+            isChecked: true,
+            priority: vm.priority)
+    }
+    
     func updateItem(indexPath: IndexPath,
                             text: String,
                             isChecked: Bool,

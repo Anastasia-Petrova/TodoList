@@ -6,6 +6,9 @@ class AddItemTableViewController: UITableViewController {
     let cancelButton: UIBarButtonItem
     let textField: UITextField
     let prioritySegmentedControl: UISegmentedControl
+    let reminderLabel: UILabel
+    let reminderTogle: UISwitch
+    
     var editingItemName = ""
     
     @objc func done() {
@@ -29,6 +32,8 @@ class AddItemTableViewController: UITableViewController {
         doneButton = UIBarButtonItem()
         cancelButton = UIBarButtonItem()
         prioritySegmentedControl = UISegmentedControl(items: TodoItemPriority.allCases.map { $0.rawValue.capitalized }.dropLast())
+        reminderLabel = UILabel()
+        reminderTogle = UISwitch()
         super.init(style: .grouped)
         self.title = "Add New Todo"
         setUpSubviews()
@@ -52,6 +57,8 @@ class AddItemTableViewController: UITableViewController {
         textField.placeholder = "What's on your mind?"
         prioritySegmentedControl.translatesAutoresizingMaskIntoConstraints = false
         prioritySegmentedControl.selectedSegmentIndex = 1
+        reminderLabel.font = .systemFont(ofSize: 18)
+        reminderLabel.text = "Remind me on a day"
         doneButton.title = "Done"
         doneButton.style = .done
         doneButton.target = self
@@ -73,10 +80,15 @@ class AddItemTableViewController: UITableViewController {
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
+        switch indexPath.section {
+        case 0:
             return createNameCell()
-        } else {
+        case 1:
             return createPriorityCell()
+        case 2:
+            return createTimerCell()
+        default:
+            return UITableViewCell()
         }
     }
     
@@ -111,8 +123,25 @@ class AddItemTableViewController: UITableViewController {
         return cell
     }
     
+    private func createTimerCell() -> UITableViewCell {
+        let cell = UITableViewCell()
+        let stackView = UIStackView(arrangedSubviews: [reminderLabel, reminderTogle])
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        cell.addSubview(stackView)
+        NSLayoutConstraint.activate([
+            cell.topAnchor.constraint(equalTo: stackView.topAnchor),
+            cell.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
+            cell.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: 16),
+            cell.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: -16)
+            ])
+    
+        
+        return cell
+    }
+
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

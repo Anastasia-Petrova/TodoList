@@ -2,21 +2,12 @@ import UIKit
 
 class TodoItemTableViewCell: UITableViewCell {
     typealias EditItemCallback = (String?) -> Void
-    typealias CheckBoxCallback = () -> Void
     var editItemCallback: EditItemCallback?
-    var checkBoxCallback: CheckBoxCallback?
-
-    @IBOutlet private var checkMark: UIButton!
     
     @IBOutlet private var textField: UITextField!
     
-    @IBAction func checkItem(_ sender: Any) {
-        checkBoxCallback?()
-    }
-    
     override func prepareForReuse() {
         super.prepareForReuse()
-        checkMark.setImage(UIImage(named: "uncheckedMark") , for: .normal)
         textField.text = ""
     }
     
@@ -32,7 +23,6 @@ class TodoItemTableViewCell: UITableViewCell {
     
     func configure(with viewModel: TodoItemViewModel) {
         textField.text = viewModel.text
-        checkMark.setImage(UIImage(named: viewModel.checkBoxIconName), for: .normal)
         if viewModel.isChecked {
             let attributeString: NSMutableAttributedString =  NSMutableAttributedString(string: textField.text!)
             attributeString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 2, range: NSMakeRange(0, attributeString.length))

@@ -97,7 +97,7 @@ public final class TodoItemDataSource: NSObject {
         updateItem(
             indexPath: indexPath,
             text: vm.text,
-            isChecked: true,
+            isChecked: !vm.isChecked,
             priority: vm.priority)
     }
     
@@ -156,6 +156,9 @@ extension TodoItemDataSource: UITableViewDataSource {
         let vm = coreDataController.getItem(at: indexPathForDataBase)
         let cell = tableView.dequeueReusableCell(withIdentifier: "TodoItemTableViewCell", for: indexPath) as! TodoItemTableViewCell
         cell.configure(with: vm)
+        if vm.isChecked {
+            cell.backgroundColor = UIColor.lightGray
+        }
         cell.editItemCallback = { [weak self] text in
             self?.updateItem(
                 indexPath: indexPathForDataBase,
@@ -164,13 +167,6 @@ extension TodoItemDataSource: UITableViewDataSource {
                 priority: vm.priority
             )
         }
-            cell.checkBoxCallback = { [weak self] in
-              self?.updateItem(
-                indexPath: indexPathForDataBase,
-                text: vm.text,
-                isChecked: !vm.isChecked,
-                priority: vm.priority)
-            }
         return cell
     }
     

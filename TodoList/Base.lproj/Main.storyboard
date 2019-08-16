@@ -30,22 +30,11 @@
                                             <rect key="frame" x="8" y="8" width="398" height="34"/>
                                             <subviews>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uZd-rJ-Wcf">
-                                                    <rect key="frame" x="0.0" y="2.5" width="360" height="29"/>
+                                                    <rect key="frame" x="0.0" y="2.5" width="398" height="29"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="24"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
-                                                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dno-N3-huD">
-                                                    <rect key="frame" x="368" y="2" width="30" height="30"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="30" id="PrZ-fA-OZI"/>
-                                                        <constraint firstAttribute="width" secondItem="Dno-N3-huD" secondAttribute="height" id="oiX-pN-gVD"/>
-                                                    </constraints>
-                                                    <state key="normal" image="uncheckedMark"/>
-                                                    <connections>
-                                                        <action selector="checkItem:" destination="YtW-mR-dzX" eventType="touchUpInside" id="Rdn-Q6-SOF"/>
-                                                    </connections>
-                                                </button>
                                             </subviews>
                                         </stackView>
                                     </subviews>
@@ -57,7 +46,6 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="checkMark" destination="Dno-N3-huD" id="V29-be-P7s"/>
                                     <outlet property="textField" destination="uZd-rJ-Wcf" id="uA6-Xq-wOb"/>
                                 </connections>
                             </tableViewCell>
@@ -112,7 +100,4 @@
             <point key="canvasLocation" x="-800" y="74"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="uncheckedMark" width="100" height="103.33333587646484"/>
-    </resources>
 </document>

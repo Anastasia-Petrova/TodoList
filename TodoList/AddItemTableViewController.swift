@@ -28,7 +28,7 @@ class AddItemTableViewController: UITableViewController {
         textField.font = .systemFont(ofSize: 24, weight: .light)
         doneButton = UIBarButtonItem()
         cancelButton = UIBarButtonItem()
-        prioritySegmentedControl = UISegmentedControl(items: TodoItemPriority.allCases.map { $0.rawValue.capitalized })
+        prioritySegmentedControl = UISegmentedControl(items: TodoItemPriority.allCases.map { $0.rawValue.capitalized }.dropLast())
         super.init(style: .grouped)
         self.title = "Add New Todo"
         setUpSubviews()

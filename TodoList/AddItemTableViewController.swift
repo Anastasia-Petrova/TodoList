@@ -57,7 +57,7 @@ class AddItemTableViewController: UITableViewController {
         textField.placeholder = "What's on your mind?"
         prioritySegmentedControl.translatesAutoresizingMaskIntoConstraints = false
         prioritySegmentedControl.selectedSegmentIndex = 1
-        reminderLabel.font = .systemFont(ofSize: 18)
+        reminderLabel.font = .systemFont(ofSize: 18, weight: .light)
         reminderLabel.text = "Remind me on a day"
         doneButton.title = "Done"
         doneButton.style = .done
@@ -115,8 +115,8 @@ class AddItemTableViewController: UITableViewController {
         let cell = UITableViewCell()
         cell.addSubview(prioritySegmentedControl)
         NSLayoutConstraint.activate([
-            cell.topAnchor.constraint(equalTo: prioritySegmentedControl.topAnchor),
-            cell.bottomAnchor.constraint(equalTo: prioritySegmentedControl.bottomAnchor),
+            cell.topAnchor.constraint(equalTo: prioritySegmentedControl.topAnchor, constant: -6),
+            cell.bottomAnchor.constraint(equalTo: prioritySegmentedControl.bottomAnchor, constant: 6),
             cell.trailingAnchor.constraint(equalTo: prioritySegmentedControl.trailingAnchor, constant: 16),
             cell.leadingAnchor.constraint(equalTo: prioritySegmentedControl.leadingAnchor, constant: -16)
             ])

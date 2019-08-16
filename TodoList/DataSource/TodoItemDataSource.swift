@@ -94,11 +94,13 @@ public final class TodoItemDataSource: NSObject {
     
     func done(at indexPath: IndexPath) {
         let vm = coreDataController.getItem(at: indexPath)
+        let isChecked = !vm.isChecked
+        let priority: TodoItemPriority = isChecked ? .done : .medium
         updateItem(
             indexPath: indexPath,
             text: vm.text,
-            isChecked: !vm.isChecked,
-            priority: vm.priority)
+            isChecked: isChecked,
+            priority: priority)
     }
     
     func updateItem(indexPath: IndexPath,

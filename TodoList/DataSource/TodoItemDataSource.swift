@@ -102,6 +102,16 @@ public final class TodoItemDataSource: NSObject {
             todoItems.first?.isChecked = true
             todoItems.first?.priority = TodoItemPriority.done.sectionName
         }
+        
+        if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemPriority.done.sectionName) {
+            let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
+            let indexPaths = (1..<numberOfItems).map{ IndexPath(row: $0, section: sectionIndex) }
+            coreDataController.updateModels(indexPaths: indexPaths) { (items) in
+                items.forEach {
+                    $0.index += 1
+                }
+            }
+        }
     }
     
     func updateItem(indexPath: IndexPath,

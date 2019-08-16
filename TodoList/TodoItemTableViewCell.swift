@@ -8,8 +8,10 @@ class TodoItemTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        textField.text = ""
+        textField.text = nil
         self.backgroundColor = UIColor.white
+        textField.attributedText = nil
+        
     }
     
     override func awakeFromNib() {

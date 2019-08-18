@@ -2,6 +2,7 @@ import UIKit
 
 class AddItemTableViewController: UITableViewController {
     typealias AddItemCallback = (String, Int) -> Void
+    var viewModel: CreateTodoViewModel
     let doneButton: UIBarButtonItem
     let cancelButton: UIBarButtonItem
     let textField: UITextField
@@ -25,7 +26,8 @@ class AddItemTableViewController: UITableViewController {
     
     var addItemCallback: AddItemCallback
     
-    init(addItemCallBack: @escaping AddItemCallback) {
+    init(viewModel: CreateTodoViewModel, addItemCallBack: @escaping AddItemCallback) {
+        self.viewModel = viewModel
         self.addItemCallback = addItemCallBack
         textField = UITextField()
         textField.font = .systemFont(ofSize: 24, weight: .light)

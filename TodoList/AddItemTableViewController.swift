@@ -5,7 +5,16 @@ class AddItemTableViewController: UITableViewController {
     var viewModel: CreateTodoViewModel {
         didSet {
             self.view.setNeedsLayout()
-            
+            if oldValue.isReminderTimeHidden != viewModel.isReminderTimeHidden {
+                let isReminderTimeHidden = viewModel.isReminderTimeHidden
+                tableView.beginUpdates()
+                    if isReminderTimeHidden {
+                        tableView.deleteRows(at: [IndexPath(row: 1, section: 2)], with: .top)
+                    } else {
+                        tableView.insertRows(at: [IndexPath(row: 1, section: 2)], with: .top)
+                    }
+               tableView.endUpdates()
+            }
         }
     }
     let doneButton: UIBarButtonItem
@@ -13,6 +22,7 @@ class AddItemTableViewController: UITableViewController {
     let textField: UITextField
     let prioritySegmentedControl: UISegmentedControl
     let reminderToggle: UISwitch
+    let picker: UIPickerView
     var editingItemName = ""
     
     @objc func priorityChanged() {
@@ -47,8 +57,11 @@ class AddItemTableViewController: UITableViewController {
         cancelButton = UIBarButtonItem()
         prioritySegmentedControl = UISegmentedControl(items: viewModel.prioritySegmentControlItems)
         reminderToggle = UISwitch()
+        picker = UIPickerView()
         super.init(style: .grouped)
         self.title = viewModel.labels.screenTitle
+        picker.delegate = self
+        picker.dataSource = self
         setUpSubviews()
     }
     
@@ -94,7 +107,11 @@ class AddItemTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 44.0
+        if indexPath.section == 2 && indexPath.row == 1 {
+            return 200
+        } else {
+            return 44.0
+        }
     }
     
     
@@ -105,7 +122,11 @@ class AddItemTableViewController: UITableViewController {
         case 1:
             return createPriorityCell()
         case 2:
-            return createTimerCell()
+            if indexPath.row == 0 {
+                return createTimerCell()
+            } else {
+                return createPickerCell()
+            }
         default:
             return UITableViewCell()
         }
@@ -160,13 +181,30 @@ class AddItemTableViewController: UITableViewController {
         
         return cell
     }
+    
+    private func createPickerCell() -> UITableViewCell {
+        let cell = UITableViewCell()
+        cell.addSubview(picker)
+        picker.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            cell.topAnchor.constraint(equalTo: picker.topAnchor, constant: -6),
+            cell.bottomAnchor.constraint(equalTo: picker.bottomAnchor, constant: 6),
+            cell.trailingAnchor.constraint(equalTo: picker.trailingAnchor, constant: 16),
+            cell.leadingAnchor.constraint(equalTo: picker.leadingAnchor, constant: -16)
+            ])
+        return cell
+    }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        if section == 2 {
+            return viewModel.isReminderOn ? 2 : 1
+        } else {
+            return 1
+        }
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
@@ -189,4 +227,16 @@ extension AddItemTableViewController: UITextFieldDelegate {
         viewModel.title = newTitle
         return true
     }
+}
+
+extension AddItemTableViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 3
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 10
+    }
+    
+    
 }

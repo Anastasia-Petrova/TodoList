@@ -5,16 +5,6 @@ class AddItemTableViewController: UITableViewController {
     var viewModel: CreateTodoViewModel {
         didSet {
             self.view.setNeedsLayout()
-            if oldValue.isReminderTimeHidden != viewModel.isReminderTimeHidden {
-                let isReminderTimeHidden = viewModel.isReminderTimeHidden
-                tableView.beginUpdates()
-                    if isReminderTimeHidden {
-                        tableView.deleteRows(at: [IndexPath(row: 1, section: 2)], with: .top)
-                    } else {
-                        tableView.insertRows(at: [IndexPath(row: 1, section: 2)], with: .top)
-                    }
-               tableView.endUpdates()
-            }
         }
     }
     let doneButton: UIBarButtonItem
@@ -59,9 +49,11 @@ class AddItemTableViewController: UITableViewController {
         reminderToggle = UISwitch()
         picker = UIPickerView()
         super.init(style: .grouped)
+        self.tableView.allowsSelection = false
         self.title = viewModel.labels.screenTitle
         picker.delegate = self
         picker.dataSource = self
+        picker.isHidden = viewModel.isReminderTimeHidden
         setUpSubviews()
     }
     
@@ -83,6 +75,12 @@ class AddItemTableViewController: UITableViewController {
         prioritySegmentedControl.selectedSegmentIndex = viewModel.selectedSegmentIndex
         doneButton.isEnabled = viewModel.isDoneButtonEnabled
         reminderToggle.isOn = viewModel.isReminderOn
+        let wasPickerHidden = picker.isHidden
+        picker.isHidden = viewModel.isReminderTimeHidden
+        if wasPickerHidden != viewModel.isReminderTimeHidden {
+            tableView.beginUpdates()
+            tableView.endUpdates()
+        }
     }
 
     private func setUpSubviews() {
@@ -106,14 +104,9 @@ class AddItemTableViewController: UITableViewController {
         textField.becomeFirstResponder()
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 2 && indexPath.row == 1 {
-            return 200
-        } else {
-            return 44.0
-        }
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+            return 44
     }
-    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
@@ -122,14 +115,18 @@ class AddItemTableViewController: UITableViewController {
         case 1:
             return createPriorityCell()
         case 2:
-            if indexPath.row == 0 {
-                return createTimerCell()
-            } else {
-                return createPickerCell()
-            }
+            return createTimerCell()
         default:
             return UITableViewCell()
         }
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -143,8 +140,8 @@ class AddItemTableViewController: UITableViewController {
         let cell = UITableViewCell()
         cell.addSubview(textField)
         NSLayoutConstraint.activate([
-            cell.topAnchor.constraint(equalTo: textField.topAnchor),
-            cell.bottomAnchor.constraint(equalTo: textField.bottomAnchor),
+            cell.topAnchor.constraint(equalTo: textField.topAnchor, constant: -6),
+            cell.bottomAnchor.constraint(equalTo: textField.bottomAnchor, constant: 6),
             cell.trailingAnchor.constraint(equalTo: textField.trailingAnchor, constant: 16),
             cell.leadingAnchor.constraint(equalTo: textField.leadingAnchor, constant: -16)
             ])
@@ -168,47 +165,27 @@ class AddItemTableViewController: UITableViewController {
         let reminderLabel = UILabel()
         reminderLabel.font = .systemFont(ofSize: 18, weight: .light)
         reminderLabel.text = viewModel.labels.reminder
-        let stackView = UIStackView(arrangedSubviews: [reminderLabel, reminderToggle])
-        stackView.alignment = .center
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        cell.addSubview(stackView)
+        let hStackView = UIStackView(arrangedSubviews: [reminderLabel, reminderToggle])
+        hStackView.setContentCompressionResistancePriority(.required, for: .vertical)
+        hStackView.alignment = .center
+        hStackView.translatesAutoresizingMaskIntoConstraints = false
+        cell.addSubview(hStackView)
+        let vStackView = UIStackView(arrangedSubviews: [picker])
+        vStackView.axis = .vertical
+        vStackView.translatesAutoresizingMaskIntoConstraints = false
+        cell.addSubview(vStackView)
         NSLayoutConstraint.activate([
-            cell.topAnchor.constraint(equalTo: stackView.topAnchor),
-            cell.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
-            cell.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: 16),
-            cell.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: -16)
+            reminderLabel.heightAnchor.constraint(equalToConstant: 32),
+            cell.topAnchor.constraint(equalTo: hStackView.topAnchor, constant: -6),
+            cell.trailingAnchor.constraint(equalTo: hStackView.trailingAnchor, constant: 16),
+            cell.leadingAnchor.constraint(equalTo: hStackView.leadingAnchor, constant: -16),
+            hStackView.bottomAnchor.constraint(equalTo: vStackView.topAnchor, constant: 0),
+            cell.bottomAnchor.constraint(equalTo: vStackView.bottomAnchor, constant: 6),
+            cell.trailingAnchor.constraint(equalTo: vStackView.trailingAnchor, constant: 16),
+            cell.leadingAnchor.constraint(equalTo: vStackView.leadingAnchor, constant: -16)
             ])
         
         return cell
-    }
-    
-    private func createPickerCell() -> UITableViewCell {
-        let cell = UITableViewCell()
-        cell.addSubview(picker)
-        picker.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            cell.topAnchor.constraint(equalTo: picker.topAnchor, constant: -6),
-            cell.bottomAnchor.constraint(equalTo: picker.bottomAnchor, constant: 6),
-            cell.trailingAnchor.constraint(equalTo: picker.trailingAnchor, constant: 16),
-            cell.leadingAnchor.constraint(equalTo: picker.leadingAnchor, constant: -16)
-            ])
-        return cell
-    }
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 2 {
-            return viewModel.isReminderOn ? 2 : 1
-        } else {
-            return 1
-        }
-    }
-    
-    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        return nil
     }
 }
 

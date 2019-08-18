@@ -2,15 +2,23 @@ import UIKit
 
 class AddItemTableViewController: UITableViewController {
     typealias AddItemCallback = (String, Int) -> Void
-    var viewModel: CreateTodoViewModel
+    var viewModel: CreateTodoViewModel {
+        didSet {
+            self.view.setNeedsLayout()
+            
+        }
+    }
     let doneButton: UIBarButtonItem
     let cancelButton: UIBarButtonItem
     let textField: UITextField
     let prioritySegmentedControl: UISegmentedControl
-    let reminderLabel: UILabel
     let reminderTogle: UISwitch
     
     var editingItemName = ""
+    
+    @objc func priorityChanged() {
+        viewModel.selectedSegmentIndex = prioritySegmentedControl.selectedSegmentIndex
+    }
     
     @objc func done() {
         self.navigationController?.popViewController(animated: true)
@@ -33,11 +41,10 @@ class AddItemTableViewController: UITableViewController {
         textField.font = .systemFont(ofSize: 24, weight: .light)
         doneButton = UIBarButtonItem()
         cancelButton = UIBarButtonItem()
-        prioritySegmentedControl = UISegmentedControl(items: TodoItemPriority.allCases.map { $0.rawValue.capitalized }.dropLast())
-        reminderLabel = UILabel()
+        prioritySegmentedControl = UISegmentedControl(items: viewModel.prioritySegmentControlItems)
         reminderTogle = UISwitch()
         super.init(style: .grouped)
-        self.title = "Add New Todo"
+        self.title = viewModel.labels.screenTitle
         setUpSubviews()
     }
     
@@ -53,19 +60,23 @@ class AddItemTableViewController: UITableViewController {
         navigationItem.rightBarButtonItem = doneButton
         doneButton.isEnabled = false
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        prioritySegmentedControl.selectedSegmentIndex = viewModel.selectedSegmentIndex
+        doneButton.isEnabled = viewModel.isDoneButtonEnabled
+    }
 
     private func setUpSubviews() {
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = "What's on your mind?"
+        textField.placeholder = viewModel.labels.titlePlaceholder
         prioritySegmentedControl.translatesAutoresizingMaskIntoConstraints = false
-        prioritySegmentedControl.selectedSegmentIndex = 1
-        reminderLabel.font = .systemFont(ofSize: 18, weight: .light)
-        reminderLabel.text = "Remind me on a day"
-        doneButton.title = "Done"
+        prioritySegmentedControl.addTarget(self, action: #selector(priorityChanged), for: .valueChanged)
+        doneButton.title = viewModel.labels.doneButton
         doneButton.style = .done
         doneButton.target = self
         doneButton.action = #selector(done)
-        cancelButton.title = "Cancel"
+        cancelButton.title = viewModel.labels.cancelButton
         cancelButton.style = .plain
         cancelButton.target = self
         cancelButton.action = #selector(cancel)
@@ -127,6 +138,9 @@ class AddItemTableViewController: UITableViewController {
     
     private func createTimerCell() -> UITableViewCell {
         let cell = UITableViewCell()
+        let reminderLabel = UILabel()
+        reminderLabel.font = .systemFont(ofSize: 18, weight: .light)
+        reminderLabel.text = viewModel.labels.reminder
         let stackView = UIStackView(arrangedSubviews: [reminderLabel, reminderTogle])
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -137,7 +151,6 @@ class AddItemTableViewController: UITableViewController {
             cell.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: 16),
             cell.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: -16)
             ])
-    
         
         return cell
     }
@@ -166,12 +179,8 @@ extension AddItemTableViewController: UITextFieldDelegate {
             let stringRange = Range(range, in: oldText) else {
                 return false
         }
-        let newText = oldText.replacingCharacters(in: stringRange, with: string)
-        if newText.isEmpty {
-            doneButton.isEnabled = false
-        } else {
-            doneButton.isEnabled = true
-        }
+        let newTitle = oldText.replacingCharacters(in: stringRange, with: string)
+        viewModel.title = newTitle
         return true
     }
 }

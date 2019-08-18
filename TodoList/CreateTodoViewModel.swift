@@ -9,8 +9,17 @@ struct CreateTodoViewModel {
     var reminderTime: Date?
     let labels = Labels()
     private let allPriorities: [TodoItemPriority]
+    var isReminderTimeHidden: Bool {
+        return reminderTime == nil
+    }
     var isReminderOn: Bool {
-        return reminderTime != nil
+        didSet {
+            if isReminderOn {
+                reminderTime = Date()
+            } else {
+                reminderTime = nil
+            }
+        }
     }
     var isDoneButtonEnabled: Bool {
         return !title.isEmpty
@@ -26,6 +35,7 @@ extension CreateTodoViewModel {
         selectedSegmentIndex = 1
         reminderTime = nil
         allPriorities = TodoItemPriority.allCases.dropLast()
+        isReminderOn = false
     }
 }
 

@@ -12,13 +12,17 @@ class AddItemTableViewController: UITableViewController {
     let cancelButton: UIBarButtonItem
     let textField: UITextField
     let prioritySegmentedControl: UISegmentedControl
-    let reminderTogle: UISwitch
-    
+    let reminderToggle: UISwitch
     var editingItemName = ""
     
     @objc func priorityChanged() {
         viewModel.selectedSegmentIndex = prioritySegmentedControl.selectedSegmentIndex
     }
+    
+    @objc func reminderToggleChanged() {
+        viewModel.isReminderOn = reminderToggle.isOn
+    }
+
     
     @objc func done() {
         self.navigationController?.popViewController(animated: true)
@@ -42,7 +46,7 @@ class AddItemTableViewController: UITableViewController {
         doneButton = UIBarButtonItem()
         cancelButton = UIBarButtonItem()
         prioritySegmentedControl = UISegmentedControl(items: viewModel.prioritySegmentControlItems)
-        reminderTogle = UISwitch()
+        reminderToggle = UISwitch()
         super.init(style: .grouped)
         self.title = viewModel.labels.screenTitle
         setUpSubviews()
@@ -65,6 +69,7 @@ class AddItemTableViewController: UITableViewController {
         super.viewDidLayoutSubviews()
         prioritySegmentedControl.selectedSegmentIndex = viewModel.selectedSegmentIndex
         doneButton.isEnabled = viewModel.isDoneButtonEnabled
+        reminderToggle.isOn = viewModel.isReminderOn
     }
 
     private func setUpSubviews() {
@@ -80,6 +85,7 @@ class AddItemTableViewController: UITableViewController {
         cancelButton.style = .plain
         cancelButton.target = self
         cancelButton.action = #selector(cancel)
+        reminderToggle.addTarget(self, action: #selector(reminderToggleChanged), for: .valueChanged)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -141,7 +147,7 @@ class AddItemTableViewController: UITableViewController {
         let reminderLabel = UILabel()
         reminderLabel.font = .systemFont(ofSize: 18, weight: .light)
         reminderLabel.text = viewModel.labels.reminder
-        let stackView = UIStackView(arrangedSubviews: [reminderLabel, reminderTogle])
+        let stackView = UIStackView(arrangedSubviews: [reminderLabel, reminderToggle])
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
         cell.addSubview(stackView)

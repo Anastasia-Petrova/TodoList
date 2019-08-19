@@ -30,6 +30,7 @@ extension TodoItemViewModel: CoreDataMappable {
             priority = defaultPriority
         }
         index = Int(model.index)
+
     }
 }
 

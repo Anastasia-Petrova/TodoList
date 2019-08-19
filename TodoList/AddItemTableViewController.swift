@@ -12,13 +12,11 @@ class AddItemTableViewController: UITableViewController {
     let textField: UITextField
     let prioritySegmentedControl: UISegmentedControl
     let reminderToggle: UISwitch
-    let picker: UIPickerView
+    let picker: UIDatePicker
     var editingItemName = ""
     let hours = (0...23).map { String($0) }
     let minutes = (1...59).map { String($0) }
-    let currentDate = Date()
-    
-//    let days = []
+
     
     @objc func priorityChanged() {
         viewModel.selectedSegmentIndex = prioritySegmentedControl.selectedSegmentIndex
@@ -33,6 +31,7 @@ class AddItemTableViewController: UITableViewController {
         self.navigationController?.popViewController(animated: true)
         if let newName = textField.text {
             let priorityIndex = prioritySegmentedControl.selectedSegmentIndex
+        
             addItemCallback(newName, priorityIndex)
         }
     }
@@ -52,12 +51,10 @@ class AddItemTableViewController: UITableViewController {
         cancelButton = UIBarButtonItem()
         prioritySegmentedControl = UISegmentedControl(items: viewModel.prioritySegmentControlItems)
         reminderToggle = UISwitch()
-        picker = UIPickerView()
+        picker = UIDatePicker()
         super.init(style: .grouped)
         self.tableView.allowsSelection = false
         self.title = viewModel.labels.screenTitle
-        picker.delegate = self
-        picker.dataSource = self
         picker.isHidden = viewModel.isReminderTimeHidden
         setUpSubviews()
     }
@@ -102,6 +99,8 @@ class AddItemTableViewController: UITableViewController {
         cancelButton.target = self
         cancelButton.action = #selector(cancel)
         reminderToggle.addTarget(self, action: #selector(reminderToggleChanged), for: .valueChanged)
+        picker.timeZone = NSTimeZone.local
+        picker.addTarget(self, action: #selector(AddItemTableViewController.datePickerValueChanged(_:)), for: .valueChanged)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -124,6 +123,13 @@ class AddItemTableViewController: UITableViewController {
         default:
             return UITableViewCell()
         }
+    }
+    
+    @objc func datePickerValueChanged(_ sender: UIDatePicker){
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy hh:mm a"
+        let selectedDate: String = dateFormatter.string(from: sender.date)
+        print("Selected value \(selectedDate)")
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -211,54 +217,7 @@ extension AddItemTableViewController: UITextFieldDelegate {
     }
 }
 
-extension AddItemTableViewController: UIPickerViewDelegate, UIPickerViewDataSource {
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 3
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        switch component {
-        case 0:
-            return generateDatesArray().count
-        case 1:
-            return hours.count
-        case 2:
-            return minutes.count
-        default:
-            return 0
-        }
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        switch component {
-        case 0:
-            let fmt = DateFormatter()
-            fmt.dateFormat = "MMM d"
-            let title = generateDatesArray()[row]
-            let result = fmt.string(from: title)
-            return result
-        case 1:
-            return hours[row]
-        case 2:
-            return minutes[row]
-        default:
-            return ""
-        }
-    }
-    
-    func generateDatesArray() -> [Date] {
-        var datesArray: [Date] = [Date]()
-        var startDate = Date()
-        let calendar = Calendar.current
-        var year = 0
-        for day in 0...366 {
-            datesArray.append(startDate)
-            startDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
-            year += day
-        }
-        return datesArray
-    }
-}
+
     
 
 

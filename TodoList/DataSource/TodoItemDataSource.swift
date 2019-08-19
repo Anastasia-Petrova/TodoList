@@ -63,12 +63,13 @@ public final class TodoItemDataSource: NSObject {
         return coreDataController.nameForSection(at: indexPath.section) != TodoItemPriority.done.sectionName
     }
     
-    func addTodoItem(name: String, prioritIndex: Int) {
+    func addTodoItem(name: String, prioritIndex: Int, remindDate: Date?) {
         let item = TodoItem()
         item.text = name
         item.priority = TodoItemPriority.allCases[prioritIndex].sectionName
         item.index = 0
         item.isChecked = false
+        item.remindDate = remindDate
         coreDataController.add(model: item)
         
         if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemPriority.allCases[prioritIndex].sectionName) {
@@ -117,7 +118,8 @@ public final class TodoItemDataSource: NSObject {
     func updateItem(indexPath: IndexPath,
                             text: String,
                             isChecked: Bool,
-                            priority: TodoItemPriority) {
+                            priority: TodoItemPriority
+        ) {
         coreDataController.updateModels(indexPaths: [indexPath]) { (todoItems) in
             todoItems.first?.text = text
             todoItems.first?.isChecked = isChecked

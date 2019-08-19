@@ -6,12 +6,13 @@ class TodoItemTableViewCell: UITableViewCell {
     
     @IBOutlet private var textField: UITextField!
     
+    @IBOutlet weak var reminderTime: UILabel!
     override func prepareForReuse() {
         super.prepareForReuse()
         textField.text = nil
         self.backgroundColor = UIColor.white
         textField.attributedText = nil
-        
+        reminderTime.text = nil
     }
     
     override func awakeFromNib() {
@@ -25,6 +26,11 @@ class TodoItemTableViewCell: UITableViewCell {
     }
     
     func configure(with viewModel: TodoItemViewModel, shouldAllowEditingText: Bool) {
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM/dd/yyyy hh:mm a"
+        if let time = viewModel.reminindDate {
+            reminderTime.text = dateFormatter.string(from: time)
+        } 
         textField.text = viewModel.text
         textField.isUserInteractionEnabled = shouldAllowEditingText
         if viewModel.isChecked {

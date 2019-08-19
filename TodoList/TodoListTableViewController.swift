@@ -20,8 +20,8 @@ class TodoListTableViewController: UITableViewController {
     
     @IBAction func addItem(_ sender: UIBarButtonItem) {
         let viewModel = CreateTodoViewModel()
-        let aivc = AddItemTableViewController(viewModel: viewModel) { [weak self] (name, priorityIndex) in
-            self?.dataSource.addTodoItem(name: name, prioritIndex: priorityIndex)
+        let aivc = AddItemTableViewController(viewModel: viewModel) { [weak self] (name, priorityIndex, remindDate) in
+            self?.dataSource.addTodoItem(name: name, prioritIndex: priorityIndex, remindDate: remindDate)
         }
         self.navigationController?.pushViewController(aivc, animated: true)
     }

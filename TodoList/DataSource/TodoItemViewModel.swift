@@ -7,6 +7,7 @@ struct TodoItemViewModel  {
     let priority: TodoItemPriority
     let index: Int
     let isSaved: Bool
+    let reminindDate: Date?
 }
 
 extension TodoItemViewModel {
@@ -30,7 +31,7 @@ extension TodoItemViewModel: CoreDataMappable {
             priority = defaultPriority
         }
         index = Int(model.index)
-
+        reminindDate = model.remindDate
     }
 }
 

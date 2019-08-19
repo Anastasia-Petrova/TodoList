@@ -1,7 +1,7 @@
 import UIKit
 
 class AddItemTableViewController: UITableViewController {
-    typealias AddItemCallback = (String, Int) -> Void
+    typealias AddItemCallback = (String, Int, Date?) -> Void
     var viewModel: CreateTodoViewModel {
         didSet {
             self.view.setNeedsLayout()
@@ -31,8 +31,8 @@ class AddItemTableViewController: UITableViewController {
         self.navigationController?.popViewController(animated: true)
         if let newName = textField.text {
             let priorityIndex = prioritySegmentedControl.selectedSegmentIndex
-        
-            addItemCallback(newName, priorityIndex)
+            let reminderTime = picker.isHidden ? nil : picker.date
+            addItemCallback(newName, priorityIndex, reminderTime)
         }
     }
     

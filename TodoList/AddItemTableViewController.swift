@@ -14,6 +14,11 @@ class AddItemTableViewController: UITableViewController {
     let reminderToggle: UISwitch
     let picker: UIPickerView
     var editingItemName = ""
+    let hours = (0...23).map { String($0) }
+    let minutes = (1...59).map { String($0) }
+    let currentDate = Date()
+    
+//    let days = []
     
     @objc func priorityChanged() {
         viewModel.selectedSegmentIndex = prioritySegmentedControl.selectedSegmentIndex
@@ -212,8 +217,57 @@ extension AddItemTableViewController: UIPickerViewDelegate, UIPickerViewDataSour
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 10
+        switch component {
+        case 0:
+            return generateDatesArray().count
+        case 1:
+            return hours.count
+        case 2:
+            return minutes.count
+        default:
+            return 0
+        }
     }
     
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        switch component {
+        case 0:
+            let fmt = DateFormatter()
+            fmt.dateFormat = "MMM d, yyyy"
+            let title = generateDatesArray()[row]
+            let result = fmt.string(from: title)
+            return result
+        case 1:
+            return hours[row]
+        case 2:
+            return minutes[row]
+        default:
+            return ""
+        }
+    }
     
+    func generateDatesArray() -> [Date] {
+        var datesArray: [Date] = [Date]()
+        var startDate = Date()
+        var dateComponents = DateComponents()
+        dateComponents.year = 2020
+        dateComponents.month = 8
+        dateComponents.day = 19
+        let calendar = Calendar.current
+        let endDate = calendar.date(from: dateComponents)!
+        
+        let fmt = DateFormatter()
+        fmt.dateFormat = "MMM d, yyyy"
+        
+        while startDate <= endDate {
+            datesArray.append(startDate)
+            startDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
+    
+        }
+        return datesArray
+    }
 }
+    
+
+
+

@@ -233,7 +233,7 @@ extension AddItemTableViewController: UIPickerViewDelegate, UIPickerViewDataSour
         switch component {
         case 0:
             let fmt = DateFormatter()
-            fmt.dateFormat = "MMM d, yyyy"
+            fmt.dateFormat = "MMM d"
             let title = generateDatesArray()[row]
             let result = fmt.string(from: title)
             return result
@@ -249,20 +249,12 @@ extension AddItemTableViewController: UIPickerViewDelegate, UIPickerViewDataSour
     func generateDatesArray() -> [Date] {
         var datesArray: [Date] = [Date]()
         var startDate = Date()
-        var dateComponents = DateComponents()
-        dateComponents.year = 2020
-        dateComponents.month = 8
-        dateComponents.day = 19
         let calendar = Calendar.current
-        let endDate = calendar.date(from: dateComponents)!
-        
-        let fmt = DateFormatter()
-        fmt.dateFormat = "MMM d, yyyy"
-        
-        while startDate <= endDate {
+        var year = 0
+        for day in 0...366 {
             datesArray.append(startDate)
             startDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
-    
+            year += day
         }
         return datesArray
     }

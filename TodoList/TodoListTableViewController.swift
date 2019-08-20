@@ -2,6 +2,7 @@ import UIKit
 
 class TodoListTableViewController: UITableViewController {
     var dataSource: TodoItemDataSource!
+    let appDelegate = UIApplication.shared.delegate as? AppDelegate
     
     @IBOutlet weak var deleteButton: UIBarButtonItem!
     @IBOutlet weak var editButton: UIBarButtonItem!

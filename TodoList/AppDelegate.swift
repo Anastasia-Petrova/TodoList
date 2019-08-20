@@ -5,25 +5,55 @@ import UserNotifications
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    let notificationCenter = UNUserNotificationCenter.current()
+    let center = UNUserNotificationCenter.current()
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        let options: UNAuthorizationOptions = [.alert, .sound, .badge]
-        notificationCenter.requestAuthorization(options: options) {
-            (didAllow, error) in
-            if !didAllow {
-                print("User has declined notifications")
+        center.delegate = self
+        let options: UNAuthorizationOptions = [.alert, .sound]
+        center.requestAuthorization(options: options) {
+            (granted, error) in
+            if !granted {
+                print("Something went wrong")
             }
         }
-        notificationCenter.getNotificationSettings { (settings) in
+        center.getNotificationSettings { (settings) in
             if settings.authorizationStatus != .authorized {
                 // Notifications not allowed
             }
-        } 
+        }            
         printCoreDataPath()
         return true
+    }
+    
+    func scheduleNotification(notificationBody: String, notificationDate: Date) {
+        let content = UNMutableNotificationContent() // Содержимое уведомления
+        content.title = "Don't forget"
+        content.body = notificationBody
+        content.sound = UNNotificationSound.default
+        content.badge = 1
+        let date = notificationDate
+        let triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute,.second,], from: date)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate,
+                                                    repeats: false)
+        let identifier = "UYLLocalNotification"
+        let request = UNNotificationRequest(identifier: identifier,
+                                            content: content, trigger: trigger)
+        center.add(request, withCompletionHandler: { (error) in
+            if let error = error {
+                // Something went wrong
+            }
+        })
+        let snoozeAction = UNNotificationAction(identifier: "Snooze",
+                                                title: "Snooze", options: [])
+        let deleteAction = UNNotificationAction(identifier: "UYLDeleteAction",
+                                                title: "Delete", options: [.destructive])
+        let category = UNNotificationCategory(identifier: "UYLReminderCategory",
+                                              actions: [snoozeAction,deleteAction],
+                                              intentIdentifiers: [], options: [])
+        center.setNotificationCategories([category])
+        content.categoryIdentifier = "UYLReminderCategory"
+
     }
     
     fileprivate func printCoreDataPath() {
@@ -33,26 +63,53 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-        // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+        
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        UIApplication.shared.applicationIconBadgeNumber = 0
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-        // Saves changes in the application's managed object context before the application terminates.
+        
+    }
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        // Play sound and show alert to the user
+        completionHandler([.alert,.sound])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+        
+        // Determine the user action
+        switch response.actionIdentifier {
+        case UNNotificationDismissActionIdentifier:
+            print("Dismiss Action")
+        case UNNotificationDefaultActionIdentifier:
+            print("Default")
+        case "Snooze":
+            print("Snooze")
+        case "Delete":
+            print("Delete")
+        default:
+            print("Unknown action")
+        }
+        completionHandler()
     }
 }
 

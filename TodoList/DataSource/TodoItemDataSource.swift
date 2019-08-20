@@ -4,6 +4,7 @@ import EasyCoreData
 public final class TodoItemDataSource: NSObject {
     let coreDataController: CoreDataController<TodoItem, TodoItemViewModel>
     let tableView: UITableView
+    let appDelegate = UIApplication.shared.delegate as? AppDelegate
     var shouldListenDataBaseUpdates = true
     var shouldDisplayAllSections: Bool {
         didSet{
@@ -71,6 +72,9 @@ public final class TodoItemDataSource: NSObject {
         item.isChecked = false
         item.remindDate = remindDate
         coreDataController.add(model: item)
+        if let notificationDate = remindDate {
+            appDelegate?.scheduleNotification(notificationBody: name, notificationDate: notificationDate)
+        }
         
         if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemPriority.allCases[prioritIndex].sectionName) {
             let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)

@@ -1,14 +1,47 @@
 import UIKit
 import UserNotifications
+import EasyCoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     let center = UNUserNotificationCenter.current()
-
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        setupNotifications()
+        printCoreDataPath()
+        return true
+    }
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        UIApplication.shared.applicationIconBadgeNumber = 0
+    }
+    
+    func scheduleNotification(notificationBody: String, notificationDate: Date, userInfo: [String : String]) {
+        let content = UNMutableNotificationContent()
+        content.title = "Don't forget"
+        content.body = notificationBody
+        content.sound = UNNotificationSound.default
+        content.badge = 1 //TODO: add to current badge value
+        content.categoryIdentifier = "ReminderCategory"
+        content.userInfo = userInfo
+        let date = notificationDate
+        let triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute,.second,], from: date)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate,
+                                                    repeats: false)
+        let identifier = "LocalNotification"
+        let request = UNNotificationRequest(identifier: identifier,
+                                            content: content,
+                                            trigger: trigger)
+        center.add(request, withCompletionHandler: { (error) in
+            if error != nil {
+                // Something went wrong
+            }
+        })
+    }
+    
+    private func setupNotifications() {
         center.delegate = self
         let options: UNAuthorizationOptions = [.alert, .sound]
         center.requestAuthorization(options: options) {
@@ -21,65 +54,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if settings.authorizationStatus != .authorized {
                 // Notifications not allowed
             }
-        }            
-        printCoreDataPath()
-        return true
-    }
-    
-    func scheduleNotification(notificationBody: String, notificationDate: Date) {
-        let content = UNMutableNotificationContent() // Содержимое уведомления
-        content.title = "Don't forget"
-        content.body = notificationBody
-        content.sound = UNNotificationSound.default
-        content.badge = 1
-        let date = notificationDate
-        let triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute,.second,], from: date)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate,
-                                                    repeats: false)
-        let identifier = "UYLLocalNotification"
-        let request = UNNotificationRequest(identifier: identifier,
-                                            content: content, trigger: trigger)
-        center.add(request, withCompletionHandler: { (error) in
-            if let error = error {
-                // Something went wrong
-            }
-        })
+        }
         let snoozeAction = UNNotificationAction(identifier: "Snooze",
                                                 title: "Snooze", options: [])
-        let deleteAction = UNNotificationAction(identifier: "UYLDeleteAction",
-                                                title: "Delete", options: [.destructive])
-        let category = UNNotificationCategory(identifier: "UYLReminderCategory",
-                                              actions: [snoozeAction,deleteAction],
+        let completeAction = UNNotificationAction(identifier: "CompleteAction",
+                                                title: "Mark as completed", options: [])
+        let category = UNNotificationCategory(identifier: "ReminderCategory",
+                                              actions: [snoozeAction, completeAction],
                                               intentIdentifiers: [], options: [])
         center.setNotificationCategories([category])
-        content.categoryIdentifier = "UYLReminderCategory"
-
     }
     
-    fileprivate func printCoreDataPath() {
+    private func printCoreDataPath() {
         // Override point for customization after application launch.
         let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
         print("DOCUMENTS: " + documentsPath)
-    }
-
-    func applicationWillResignActive(_ application: UIApplication) {
-        
-    }
-
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        
-    }
-
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        
-    }
-
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        UIApplication.shared.applicationIconBadgeNumber = 0
-    }
-
-    func applicationWillTerminate(_ application: UIApplication) {
-        
     }
 }
 
@@ -104,8 +93,16 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             print("Default")
         case "Snooze":
             print("Snooze")
-        case "Delete":
-            print("Delete")
+        case "CompleteAction":
+            if let urlString = response.notification.request.content.userInfo["url"] as? String,
+                let url = URL(string: urlString) {
+                let coreDataController = CoreDataController<TodoItem, TodoItemViewModel>.init(entityName: "TodoItem")
+                coreDataController.updateModels(urls: [url]) { (items) in
+                    items.first?.isChecked = true
+                    items.first?.priority = TodoItemPriority.done.sectionName
+                }
+            }
+            print("CompleteAction")
         default:
             print("Unknown action")
         }

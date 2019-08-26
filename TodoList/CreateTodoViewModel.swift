@@ -32,12 +32,19 @@ struct CreateTodoViewModel {
 
 extension CreateTodoViewModel {
     init(mode: Mode) {
-        title = ""
         selectedSegmentIndex = 1
-        reminderTime = nil
         allPriorities = TodoItemPriority.allCases.dropLast()
-        isReminderOn = false
         self.mode = mode
+        switch mode {
+        case .create:
+            title = ""
+            isReminderOn = false
+            reminderTime = nil
+        case let .edit(title, date, _):
+            self.title = title
+            isReminderOn = date != nil
+            reminderTime = date
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 import Foundation
 
 struct CreateTodoViewModel {
+    let mode: Mode
     var title: String
     var selectedSegmentIndex: Int
     var priority: TodoItemPriority {
@@ -36,6 +37,7 @@ extension CreateTodoViewModel {
         reminderTime = nil
         allPriorities = TodoItemPriority.allCases.dropLast()
         isReminderOn = false
+        mode = .create
     }
 }
 
@@ -46,5 +48,12 @@ extension CreateTodoViewModel {
         let titlePlaceholder = "What's on your mind?"
         let reminder = "Remind me on a day"
         let screenTitle = "Add New Todo"
+    }
+}
+
+extension CreateTodoViewModel {
+    enum Mode {
+        case create
+        case edit(title: String, date: Date?, callBack: (String, Date?) -> Void)
     }
 }

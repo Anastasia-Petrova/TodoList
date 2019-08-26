@@ -131,6 +131,11 @@ public final class TodoItemDataSource: NSObject {
             todoItems.first?.priority = priority.sectionName
         }
     }
+    
+    func getItemInfo(indexPath: IndexPath) -> (String, Date?) {
+        let item = coreDataController.getItem(at: indexPath)
+        return (item.text, item.reminindDate)
+    }
 }
 
 extension TodoItemDataSource: UITableViewDataSource {

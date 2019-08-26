@@ -57,6 +57,12 @@ class AddItemTableViewController: UITableViewController {
         self.title = viewModel.labels.screenTitle
         picker.isHidden = viewModel.isReminderTimeHidden
         setUpSubviews()
+        switch viewModel.mode {
+        case let .edit(title, date, callBack):
+            setUpForEditingMode(title: title, date: date)
+        case .create:
+            break
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -70,6 +76,15 @@ class AddItemTableViewController: UITableViewController {
         navigationItem.leftBarButtonItem = cancelButton
         navigationItem.rightBarButtonItem = doneButton
         doneButton.isEnabled = false
+        
+    }
+    
+    func setUpForEditingMode(title: String, date: Date?) {
+        textField.text = title
+        if let newDate = date {
+            picker.date = newDate
+        }
+    
     }
     
     override func viewDidLayoutSubviews() {

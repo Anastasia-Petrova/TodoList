@@ -20,7 +20,7 @@ class TodoListTableViewController: UITableViewController {
     }
     
     @IBAction func addItem(_ sender: UIBarButtonItem) {
-        let viewModel = CreateTodoViewModel()
+        let viewModel = CreateTodoViewModel(mode: .create)
         navigateToAddItemScreen(viewModel: viewModel)
     }
     
@@ -46,7 +46,13 @@ class TodoListTableViewController: UITableViewController {
             updateDeleteButtonState()
         } else {
             tableView.deselectRow(at: indexPath, animated: true)
-            let viewModel = CreateTodoViewModel()
+            let itemInfo = dataSource.getItemInfo(indexPath: indexPath)
+            
+            let viewModel = CreateTodoViewModel(mode: .edit(title: itemInfo.0,
+                                                            date: itemInfo.1,
+                                                            callBack: { (newTitle, newDate) in
+                                                                
+            }))
             navigateToAddItemScreen(viewModel: viewModel)
         }
     }

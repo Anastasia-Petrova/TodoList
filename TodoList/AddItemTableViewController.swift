@@ -14,8 +14,7 @@ class AddItemTableViewController: UITableViewController {
     let reminderToggle: UISwitch
     let picker: UIDatePicker
     var editingItemName = ""
-    let hours = (0...23).map { String($0) }
-    let minutes = (1...59).map { String($0) }
+    
 
     
     @objc func priorityChanged() {

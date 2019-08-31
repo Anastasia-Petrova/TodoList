@@ -50,7 +50,8 @@ class AddItemTableViewController: UITableViewController {
         picker.date = viewModel.reminderTime ?? Date()
         super.init(style: .grouped)
         self.tableView.allowsSelection = false
-        self.title = viewModel.mode == .create ? viewModel.labels.screenTitle : viewModel.labels.editScreenTitle
+        
+        self.title = viewModel.mode.isCreate ? viewModel.labels.screenTitle : viewModel.labels.editScreenTitle
         picker.isHidden = !viewModel.hasReminder
         setUpSubviews()
     }
@@ -165,7 +166,7 @@ class AddItemTableViewController: UITableViewController {
 
 extension AddItemTableViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return viewModel.mode == .create ? 3 : 2
+        return viewModel.mode.isCreate ? 3 : 2
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -173,7 +174,7 @@ extension AddItemTableViewController {
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if viewModel.mode == .create && section == 1  {
+        if viewModel.mode.isCreate && section == 1  {
             return "Choose priority"
         }
         return nil
@@ -188,7 +189,7 @@ extension AddItemTableViewController {
         case 0:
             return createNameCell()
         case 1:
-            return viewModel.mode == .create ? createPriorityCell() : createTimerCell()
+            return viewModel.mode.isCreate ? createPriorityCell() : createTimerCell()
         case 2:
             return createTimerCell()
         default:

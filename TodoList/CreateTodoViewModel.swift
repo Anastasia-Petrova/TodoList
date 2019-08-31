@@ -30,7 +30,7 @@ extension CreateTodoViewModel {
         case .create:
             title = ""
             reminderTime = nil
-        case let .edit(title, date):
+        case let .edit(title, date, _):
             self.title = title
             reminderTime = date
         }
@@ -49,19 +49,17 @@ extension CreateTodoViewModel {
 }
 
 extension CreateTodoViewModel {
-    enum Mode: Equatable {
-        static func == (lhs: CreateTodoViewModel.Mode, rhs: CreateTodoViewModel.Mode) -> Bool {
-            switch (lhs, rhs)  {
-            case (.create, .create):
+    enum Mode {
+        case create(callback: (String, Int, Date?) -> Void)
+        case edit(title: String, date: Date?, callback: (String, Date?) -> Void)
+    
+        var isCreate: Bool {
+            switch self {
+            case .create:
                 return true
-            case let (.edit(lhsTitle, lhsDate), .edit(rhsTitle, rhsDate)):
-                return lhsTitle == rhsTitle && lhsDate == rhsDate
             default:
                 return false
             }
         }
-        
-        case create
-        case edit(title: String, date: Date?)
-    }
+    }   
 }

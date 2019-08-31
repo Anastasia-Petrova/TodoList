@@ -30,7 +30,7 @@ extension CreateTodoViewModel {
         case .create:
             title = ""
             reminderTime = nil
-        case let .edit(title, date, _):
+        case let .edit(title, date):
             self.title = title
             reminderTime = date
         }
@@ -44,12 +44,24 @@ extension CreateTodoViewModel {
         let titlePlaceholder = "What's on your mind?"
         let reminder = "Remind me on a day"
         let screenTitle = "Add New Todo"
+        let editScreenTitle = "Edit Todo"
     }
 }
 
 extension CreateTodoViewModel {
-    enum Mode {
+    enum Mode: Equatable {
+        static func == (lhs: CreateTodoViewModel.Mode, rhs: CreateTodoViewModel.Mode) -> Bool {
+            switch (lhs, rhs)  {
+            case (.create, .create):
+                return true
+            case let (.edit(lhsTitle, lhsDate), .edit(rhsTitle, rhsDate)):
+                return lhsTitle == rhsTitle && lhsDate == rhsDate
+            default:
+                return false
+            }
+        }
+        
         case create
-        case edit(title: String, date: Date?, callBack: (String, Date?) -> Void)
+        case edit(title: String, date: Date?)
     }
 }

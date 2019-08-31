@@ -49,10 +49,7 @@ class TodoListTableViewController: UITableViewController {
             let itemInfo = dataSource.getItemInfo(indexPath: indexPath)
             
             let viewModel = CreateTodoViewModel(mode: .edit(title: itemInfo.0,
-                                                            date: itemInfo.1,
-                                                            callBack: { (newTitle, newDate) in
-                                                                
-            }))
+                                                            date: itemInfo.1))
             navigateToAddItemScreen(viewModel: viewModel)
         }
     }

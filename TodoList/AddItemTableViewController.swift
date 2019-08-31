@@ -13,6 +13,7 @@ class AddItemTableViewController: UITableViewController {
     let prioritySegmentedControl: UISegmentedControl
     let reminderToggle: UISwitch
     let picker: UIDatePicker
+    var addItemCallback: AddItemCallback
     
     @objc func priorityChanged() {
         viewModel.selectedSegmentIndex = prioritySegmentedControl.selectedSegmentIndex
@@ -35,8 +36,6 @@ class AddItemTableViewController: UITableViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
-    var addItemCallback: AddItemCallback
-    
     init(viewModel: CreateTodoViewModel, addItemCallBack: @escaping AddItemCallback) {
         self.viewModel = viewModel
         self.addItemCallback = addItemCallBack
@@ -51,7 +50,7 @@ class AddItemTableViewController: UITableViewController {
         picker.date = viewModel.reminderTime ?? Date()
         super.init(style: .grouped)
         self.tableView.allowsSelection = false
-        self.title = viewModel.labels.screenTitle
+        self.title = viewModel.mode == .create ? viewModel.labels.screenTitle : viewModel.labels.editScreenTitle
         picker.isHidden = !viewModel.hasReminder
         setUpSubviews()
     }
@@ -104,43 +103,11 @@ class AddItemTableViewController: UITableViewController {
         textField.becomeFirstResponder()
     }
     
-    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-            return 44
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.section {
-        case 0:
-            return createNameCell()
-        case 1:
-            return createPriorityCell()
-        case 2:
-            return createTimerCell()
-        default:
-            return UITableViewCell()
-        }
-    }
-    
     @objc func datePickerValueChanged(_ sender: UIDatePicker){
         let dateFormatter: DateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM/dd/yyyy hh:mm a"
         let selectedDate: String = dateFormatter.string(from: sender.date)
         print("Selected value \(selectedDate)")
-    }
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-    
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 1 {
-            return "Choose priority"
-        }
-        return nil
     }
     
     private func createNameCell() -> UITableViewCell {
@@ -193,6 +160,40 @@ class AddItemTableViewController: UITableViewController {
             ])
         
         return cell
+    }
+}
+
+extension AddItemTableViewController {
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return viewModel.mode == .create ? 3 : 2
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if viewModel.mode == .create && section == 1  {
+            return "Choose priority"
+        }
+        return nil
+    }
+    
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 44
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch indexPath.section {
+        case 0:
+            return createNameCell()
+        case 1:
+            return viewModel.mode == .create ? createPriorityCell() : createTimerCell()
+        case 2:
+            return createTimerCell()
+        default:
+            return UITableViewCell()
+        }
     }
 }
 

@@ -13,19 +13,15 @@ class AddItemTableViewController: UITableViewController {
     let prioritySegmentedControl: UISegmentedControl
     let reminderToggle: UISwitch
     let picker: UIDatePicker
-    var editingItemName = ""
-    
-
     
     @objc func priorityChanged() {
         viewModel.selectedSegmentIndex = prioritySegmentedControl.selectedSegmentIndex
     }
     
     @objc func reminderToggleChanged() {
-        viewModel.isReminderOn = reminderToggle.isOn
+        viewModel.reminderTime = reminderToggle.isOn ? Date() : nil
     }
 
-    
     @objc func done() {
         self.navigationController?.popViewController(animated: true)
         if let newName = textField.text {
@@ -46,11 +42,13 @@ class AddItemTableViewController: UITableViewController {
         self.addItemCallback = addItemCallBack
         textField = UITextField()
         textField.font = .systemFont(ofSize: 24, weight: .light)
+        textField.text = viewModel.title
         doneButton = UIBarButtonItem()
         cancelButton = UIBarButtonItem()
         prioritySegmentedControl = UISegmentedControl(items: viewModel.prioritySegmentControlItems)
         reminderToggle = UISwitch()
         picker = UIDatePicker()
+        picker.date = viewModel.reminderTime ?? Date()
         super.init(style: .grouped)
         self.tableView.allowsSelection = false
         self.title = viewModel.labels.screenTitle
@@ -65,7 +63,6 @@ class AddItemTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         textField.delegate = self
-        textField.text = editingItemName
         navigationItem.leftBarButtonItem = cancelButton
         navigationItem.rightBarButtonItem = doneButton
         doneButton.isEnabled = false

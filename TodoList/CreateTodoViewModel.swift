@@ -14,13 +14,7 @@ struct CreateTodoViewModel {
         return reminderTime == nil
     }
     var isReminderOn: Bool {
-        didSet {
-            if isReminderOn {
-                reminderTime = Date()
-            } else {
-                reminderTime = nil
-            }
-        }
+        return reminderTime != nil
     }
     var isDoneButtonEnabled: Bool {
         return !title.isEmpty
@@ -38,11 +32,9 @@ extension CreateTodoViewModel {
         switch mode {
         case .create:
             title = ""
-            isReminderOn = false
             reminderTime = nil
         case let .edit(title, date, _):
             self.title = title
-            isReminderOn = date != nil
             reminderTime = date
         }
     }

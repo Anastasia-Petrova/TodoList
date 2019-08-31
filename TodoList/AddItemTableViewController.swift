@@ -1,7 +1,6 @@
 import UIKit
 
 class AddItemTableViewController: UITableViewController {
-    typealias AddItemCallback = (String, Int, Date?) -> Void
     var viewModel: CreateTodoViewModel {
         didSet {
             self.view.setNeedsLayout()
@@ -13,7 +12,6 @@ class AddItemTableViewController: UITableViewController {
     let prioritySegmentedControl: UISegmentedControl
     let reminderToggle: UISwitch
     let picker: UIDatePicker
-    var addItemCallback: AddItemCallback
     
     @objc func priorityChanged() {
         viewModel.selectedSegmentIndex = prioritySegmentedControl.selectedSegmentIndex
@@ -25,10 +23,11 @@ class AddItemTableViewController: UITableViewController {
 
     @objc func done() {
         self.navigationController?.popViewController(animated: true)
-        if let newName = textField.text {
-            let priorityIndex = prioritySegmentedControl.selectedSegmentIndex
-            let reminderTime = picker.isHidden ? nil : picker.date
-            addItemCallback(newName, priorityIndex, reminderTime)
+        switch viewModel.mode {
+        case let .create(callback):
+            callback(viewModel.title, viewModel.selectedSegmentIndex, viewModel.reminderTime)
+        case let .edit(_, _, callback):
+            callback(viewModel.title, viewModel.reminderTime)
         }
     }
     
@@ -36,9 +35,8 @@ class AddItemTableViewController: UITableViewController {
         self.navigationController?.popViewController(animated: true)
     }
     
-    init(viewModel: CreateTodoViewModel, addItemCallBack: @escaping AddItemCallback) {
+    init(viewModel: CreateTodoViewModel) {
         self.viewModel = viewModel
-        self.addItemCallback = addItemCallBack
         textField = UITextField()
         textField.font = .systemFont(ofSize: 24, weight: .light)
         textField.text = viewModel.title
@@ -105,10 +103,7 @@ class AddItemTableViewController: UITableViewController {
     }
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker){
-        let dateFormatter: DateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM/dd/yyyy hh:mm a"
-        let selectedDate: String = dateFormatter.string(from: sender.date)
-        print("Selected value \(selectedDate)")
+        viewModel.reminderTime = sender.date
     }
     
     private func createNameCell() -> UITableViewCell {

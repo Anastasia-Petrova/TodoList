@@ -28,9 +28,7 @@ class TodoListTableViewController: UITableViewController {
     }
     
     func navigateToAddItemScreen(viewModel: CreateTodoViewModel) {
-        let aivc = AddItemTableViewController(viewModel: viewModel) { [weak self] (name, priorityIndex, remindDate) in
-            self?.dataSource.addTodoItem(name: name, prioritIndex: priorityIndex, remindDate: remindDate)
-        }
+        let aivc = AddItemTableViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(aivc, animated: true)
     }
 
@@ -50,8 +48,8 @@ class TodoListTableViewController: UITableViewController {
         } else {
             tableView.deselectRow(at: indexPath, animated: true)
             let itemInfo = dataSource.getItemInfo(indexPath: indexPath)
-            let mode = CreateTodoViewModel.Mode.edit(title: itemInfo.0, date: itemInfo.1) { [weak self] (title, date) in
-                self?.dataSource.addTodoItem(name: title, prioritIndex: 0, remindDate: date)
+            let mode = CreateTodoViewModel.Mode.edit(title: itemInfo.text, date: itemInfo.reminindDate) { [weak self] (title, date) in
+                self?.dataSource.updateItem(indexPath: indexPath, text: title, isChecked: itemInfo.isChecked, priority: itemInfo.priority, reminderTime: date)
             }
             let viewModel = CreateTodoViewModel(mode: mode)
             navigateToAddItemScreen(viewModel: viewModel)

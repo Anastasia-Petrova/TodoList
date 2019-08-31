@@ -123,18 +123,19 @@ public final class TodoItemDataSource: NSObject {
     func updateItem(indexPath: IndexPath,
                             text: String,
                             isChecked: Bool,
-                            priority: TodoItemPriority
+                            priority: TodoItemPriority,
+                            reminderTime: Date?
         ) {
         coreDataController.updateModels(indexPaths: [indexPath]) { (todoItems) in
             todoItems.first?.text = text
             todoItems.first?.isChecked = isChecked
             todoItems.first?.priority = priority.sectionName
+            todoItems.first?.remindDate = reminderTime
         }
     }
     
-    func getItemInfo(indexPath: IndexPath) -> (String, Date?) {
-        let item = coreDataController.getItem(at: indexPath)
-        return (item.text, item.reminindDate)
+    func getItemInfo(indexPath: IndexPath) -> (TodoItemViewModel) {
+        return coreDataController.getItem(at: indexPath)
     }
 }
 
@@ -186,7 +187,8 @@ extension TodoItemDataSource: UITableViewDataSource {
                 indexPath: indexPathForDataBase,
                 text: text ?? "",
                 isChecked: vm.isChecked,
-                priority: vm.priority
+                priority: vm.priority,
+                reminderTime: vm.reminindDate
             )
         }
         return cell

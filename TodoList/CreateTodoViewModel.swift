@@ -10,10 +10,7 @@ struct CreateTodoViewModel {
     var reminderTime: Date?
     let labels = Labels()
     private let allPriorities: [TodoItemPriority]
-    var isReminderTimeHidden: Bool {
-        return reminderTime == nil
-    }
-    var isReminderOn: Bool {
+    var hasReminder: Bool {
         return reminderTime != nil
     }
     var isDoneButtonEnabled: Bool {

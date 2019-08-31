@@ -52,7 +52,7 @@ class AddItemTableViewController: UITableViewController {
         super.init(style: .grouped)
         self.tableView.allowsSelection = false
         self.title = viewModel.labels.screenTitle
-        picker.isHidden = viewModel.isReminderTimeHidden
+        picker.isHidden = !viewModel.hasReminder
         setUpSubviews()
     }
     
@@ -72,10 +72,10 @@ class AddItemTableViewController: UITableViewController {
         super.viewDidLayoutSubviews()
         prioritySegmentedControl.selectedSegmentIndex = viewModel.selectedSegmentIndex
         doneButton.isEnabled = viewModel.isDoneButtonEnabled
-        reminderToggle.isOn = viewModel.isReminderOn
+        reminderToggle.isOn = viewModel.hasReminder
         let wasPickerHidden = picker.isHidden
-        picker.isHidden = viewModel.isReminderTimeHidden
-        if wasPickerHidden != viewModel.isReminderTimeHidden {
+        picker.isHidden = !viewModel.hasReminder
+        if wasPickerHidden != picker.isHidden {
             tableView.beginUpdates()
             tableView.endUpdates()
         }

@@ -99,7 +99,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 let coreDataController = CoreDataController<TodoItem, TodoItemViewModel>.init(entityName: "TodoItem")
                 coreDataController.updateModels(urls: [url]) { (items) in
                     items.first?.isChecked = true
-                    items.first?.priority = TodoItemPriority.done.sectionName
                 }
             }
             print("CompleteAction")

@@ -2,7 +2,6 @@ enum TodoItemPriority: String, CaseIterable {
     case high
     case medium
     case low
-    case done
     
     var sectionName: String {
         switch self {
@@ -12,8 +11,6 @@ enum TodoItemPriority: String, CaseIterable {
             return "b"
         case .low:
             return "c"
-        case .done:
-            return "d"
         }
     }
     
@@ -25,8 +22,6 @@ enum TodoItemPriority: String, CaseIterable {
             self = .medium
         case "c":
             self = .low
-        case "d":
-            self = .done
         default:
             self = .medium
         }

@@ -61,8 +61,7 @@ public final class TodoItemDataSource: NSObject {
     }
     
     func canPerfornCheckAction(indexPath: IndexPath) -> Bool {
-        let item = coreDataController.getItem(at: indexPath)
-        return !item.isChecked
+        return coreDataController.nameForSection(at: indexPath.section) != TodoItemPriority.done.sectionName
     }
     
     func addTodoItem(name: String, prioritIndex: Int, remindDate: Date?) {
@@ -107,17 +106,18 @@ public final class TodoItemDataSource: NSObject {
         coreDataController.updateModels(indexPaths: [indexPath]) { (todoItems) in
             todoItems.first?.index = 0
             todoItems.first?.isChecked = true
+            todoItems.first?.priority = TodoItemPriority.done.sectionName
         }
         
-//        if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemPriority.done.sectionName) {
-//            let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
-//            let indexPaths = (1..<numberOfItems).map{ IndexPath(row: $0, section: sectionIndex) }
-//            coreDataController.updateModels(indexPaths: indexPaths) { (items) in
-//                items.forEach {
-//                    $0.index += 1
-//                }
-//            }
-//        }
+        if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemPriority.done.sectionName) {
+            let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
+            let indexPaths = (1..<numberOfItems).map{ IndexPath(row: $0, section: sectionIndex) }
+            coreDataController.updateModels(indexPaths: indexPaths) { (items) in
+                items.forEach {
+                    $0.index += 1
+                }
+            }
+        }
     }
     
     func updateItem(indexPath: IndexPath,
@@ -247,7 +247,7 @@ extension TodoItemDataSource: UITableViewDataSource {
                 }
                 movingItem?.index = Int32(destinationIndexPath.row)
                 movingItem?.priority = TodoItemPriority.allCases[destionationSectionIndex].sectionName
-                if TodoItemPriority.allCases.count == destionationSectionIndex {
+                if TodoItemPriority.allCases[destionationSectionIndex] == TodoItemPriority.done {
                     movingItem?.isChecked = true
                 } else {
                     movingItem?.isChecked = false

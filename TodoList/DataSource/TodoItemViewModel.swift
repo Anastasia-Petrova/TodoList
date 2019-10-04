@@ -11,8 +11,15 @@ struct TodoItemViewModel  {
 }
 
 extension TodoItemViewModel {
-    var checkBoxIconName: String {
-        return isChecked ? "checkedMark" : "uncheckedMark"
+//    var checkBoxIconName: String {
+//        return isChecked ? "checkedMark" : "uncheckedMark"
+//    }
+    
+    var isExpired: Bool {
+        if let reminindDate = reminindDate {
+            return reminindDate < Date()
+        }
+        return false
     }
 }
 

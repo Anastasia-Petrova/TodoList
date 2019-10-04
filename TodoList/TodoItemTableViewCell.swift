@@ -22,7 +22,6 @@ class TodoItemTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
     }
     
     func configure(with viewModel: TodoItemViewModel, shouldAllowEditingText: Bool) {
@@ -30,6 +29,7 @@ class TodoItemTableViewCell: UITableViewCell {
         dateFormatter.dateFormat = "MM/dd/yyyy hh:mm a"
         if let time = viewModel.reminindDate {
             reminderTime.text = dateFormatter.string(from: time)
+            reminderTime.textColor = viewModel.isExpired ? UIColor.red : UIColor.lightGray
         } 
         textField.text = viewModel.text
         textField.isUserInteractionEnabled = shouldAllowEditingText

@@ -56,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         let snoozeAction = UNNotificationAction(identifier: "Snooze",
-                                                title: "Snooze for 1 minute", options: [])
+                                                title: "Snooze for 5 minute", options: [])
         let completeAction = UNNotificationAction(identifier: "CompleteAction",
                                                 title: "Mark as completed", options: [])
         let category = UNNotificationCategory(identifier: "ReminderCategory",

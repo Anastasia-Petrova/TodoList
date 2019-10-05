@@ -49,7 +49,17 @@ class TodoListTableViewController: UITableViewController {
             tableView.deselectRow(at: indexPath, animated: true)
             let itemInfo = dataSource.getItemInfo(indexPath: indexPath)
             let mode = CreateTodoViewModel.Mode.edit(title: itemInfo.text, date: itemInfo.reminindDate) { [weak self] (title, date) in
-                self?.dataSource.updateItem(indexPath: indexPath, text: title, isChecked: itemInfo.isChecked, priority: itemInfo.priority, reminderTime: date)
+                self?.dataSource.updateItem(
+                    indexPath: indexPath,
+                    text: title,
+                    isChecked: itemInfo.isChecked,
+                    priority: itemInfo.priority,
+                    reminderTime: date
+                )
+                let url = itemInfo.url.absoluteString
+                if let notificationDate = date {
+                    self?.appDelegate?.scheduleNotification(notificationBody: itemInfo.text, notificationDate: notificationDate, userInfo: ["url" : url])
+                }
             }
             let viewModel = CreateTodoViewModel(mode: mode)
             navigateToAddItemScreen(viewModel: viewModel)

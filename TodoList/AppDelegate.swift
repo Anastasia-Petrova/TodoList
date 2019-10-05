@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
-    func scheduleNotification(notificationBody: String, notificationDate: Date, userInfo: [String : String]) {
+    func scheduleNotification(notificationBody: String, notificationDate: Date, userInfo: [String : String], identifier: String) {
         let content = UNMutableNotificationContent()
         content.title = "Don't forget"
         content.body = notificationBody
@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute,.second,], from: date)
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate,
                                                     repeats: false)
-        let identifier = "LocalNotification"
+//        let identifier = "LocalNotification"
         let request = UNNotificationRequest(identifier: identifier,
                                             content: content,
                                             trigger: trigger)
@@ -89,7 +89,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 let newDate = calendar.date(byAdding: .minute, value: minutes, to: remind)
                 items.first?.remindDate = newDate
                 if let notificationDate = newDate, let name = items.first?.text {
-                    self.scheduleNotification(notificationBody: name, notificationDate: notificationDate, userInfo: ["url" : url.absoluteString])
+                    self.scheduleNotification(notificationBody: name, notificationDate: notificationDate, userInfo: ["url" : url.absoluteString], identifier: url.absoluteString)
                 }
             }
         }

@@ -74,7 +74,7 @@ public final class TodoItemDataSource: NSObject {
         coreDataController.add(model: item)
         let url = item.objectID.uriRepresentation().absoluteString
         if let notificationDate = remindDate {
-            appDelegate?.scheduleNotification(notificationBody: name, notificationDate: notificationDate, userInfo: ["url" : url])
+            appDelegate?.scheduleNotification(notificationBody: name, notificationDate: notificationDate, userInfo: ["url" : url], identifier: url)
         }
         
         if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemPriority.allCases[prioritIndex].sectionName) {

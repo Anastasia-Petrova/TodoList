@@ -58,7 +58,7 @@ class TodoListTableViewController: UITableViewController {
                 )
                 let url = itemInfo.url.absoluteString
                 if let notificationDate = date {
-                    self?.appDelegate?.scheduleNotification(notificationBody: itemInfo.text, notificationDate: notificationDate, userInfo: ["url" : url])
+                    self?.appDelegate?.scheduleNotification(notificationBody: itemInfo.text, notificationDate: notificationDate, userInfo: ["url" : url], identifier: url)
                 }
             }
             let viewModel = CreateTodoViewModel(mode: mode)

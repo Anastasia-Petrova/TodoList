@@ -19,26 +19,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func scheduleNotification(notificationBody: String, notificationDate: Date, userInfo: [String : String], identifier: String) {
-        let content = UNMutableNotificationContent()
-        content.title = "Don't forget"
-        content.body = notificationBody
-        content.sound = UNNotificationSound.default
-        content.badge = 1 //TODO: add to current badge value
-        content.categoryIdentifier = "ReminderCategory"
-        content.userInfo = userInfo
-        let date = notificationDate
-        let triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute,.second,], from: date)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate,
-                                                    repeats: false)
-//        let identifier = "LocalNotification"
-        let request = UNNotificationRequest(identifier: identifier,
-                                            content: content,
-                                            trigger: trigger)
-        center.add(request, withCompletionHandler: { (error) in
-            if error != nil {
-                // Something went wrong
+        center.getPendingNotificationRequests { [weak self] (pendingRequests) in
+            DispatchQueue.main.async {
+                let content = UNMutableNotificationContent()
+                content.title = "Don't forget"
+                content.body = notificationBody
+                content.sound = UNNotificationSound.default
+                let pendingRequestsCount = pendingRequests.count //FIXME: 
+                content.badge = NSNumber(value: UIApplication.shared.applicationIconBadgeNumber + 1 + pendingRequestsCount)
+                content.categoryIdentifier = "ReminderCategory"
+                content.userInfo = userInfo
+                let date = notificationDate
+                let triggerDate = Calendar.current.dateComponents([.year,.month,.day,.hour,.minute,.second,], from: date)
+                let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate,
+                                                            repeats: false)
+                //        let identifier = "LocalNotification"
+                let request = UNNotificationRequest(identifier: identifier,
+                                                    content: content,
+                                                    trigger: trigger)
+                
+                self?.center.add(request, withCompletionHandler: { (error) in
+                    if error != nil {
+                        // Something went wrong
+                    }
+                })
             }
-        })
+        }
     }
     
     private func setupNotifications() {
@@ -58,7 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let snoozeAction = UNNotificationAction(identifier: "Snooze",
                                                 title: "Snooze for 5 minute", options: [])
         let completeAction = UNNotificationAction(identifier: "CompleteAction",
-                                                title: "Mark as completed", options: [])
+                                                  title: "Mark as completed", options: [])
         let category = UNNotificationCategory(identifier: "ReminderCategory",
                                               actions: [snoozeAction, completeAction],
                                               intentIdentifiers: [], options: [])
@@ -98,8 +104,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
-        
-        // Determine the user action
         switch response.actionIdentifier {
         case UNNotificationDismissActionIdentifier:
             print("Dismiss Action")

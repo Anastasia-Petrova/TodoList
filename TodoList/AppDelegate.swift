@@ -56,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         let snoozeAction = UNNotificationAction(identifier: "Snooze",
-                                                title: "Snooze", options: [])
+                                                title: "Snooze for 1 minute", options: [])
         let completeAction = UNNotificationAction(identifier: "CompleteAction",
                                                 title: "Mark as completed", options: [])
         let category = UNNotificationCategory(identifier: "ReminderCategory",
@@ -81,6 +81,20 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         completionHandler([.alert,.sound])
     }
     
+    fileprivate func snoooze(_ url: URL, minutes: Int) {
+        let coreDataController = CoreDataController<TodoItem, TodoItemViewModel>.init(entityName: "TodoItem")
+        coreDataController.updateModels(urls: [url]) { (items) in
+            let calendar = Calendar.current
+            if let remind = items.first?.remindDate {
+                let newDate = calendar.date(byAdding: .minute, value: minutes, to: remind)
+                items.first?.remindDate = newDate
+                if let notificationDate = newDate, let name = items.first?.text {
+                    self.scheduleNotification(notificationBody: name, notificationDate: notificationDate, userInfo: ["url" : url.absoluteString])
+                }
+            }
+        }
+    }
+    
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -92,6 +106,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         case UNNotificationDefaultActionIdentifier:
             print("Default")
         case "Snooze":
+            if let urlString = response.notification.request.content.userInfo["url"] as? String,
+                let url = URL(string: urlString) {
+                snoooze(url, minutes: 5)
+            }
             print("Snooze")
         case "CompleteAction":
             if let urlString = response.notification.request.content.userInfo["url"] as? String,

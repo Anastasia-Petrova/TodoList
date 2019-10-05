@@ -79,7 +79,7 @@ public final class TodoItemDataSource: NSObject {
         
         if let sectionIndex = coreDataController.indexForSectionName(name: TodoItemPriority.allCases[prioritIndex].sectionName) {
             let numberOfItems = coreDataController.numberOfItems(in: sectionIndex)
-            let indexPaths = (1..<numberOfItems).map{ IndexPath(row: $0, section: sectionIndex) }
+            let indexPaths = (1..<numberOfItems).map { IndexPath(row: $0, section: sectionIndex) }
             coreDataController.updateModels(indexPaths: indexPaths) { (items) in
                 items.forEach {
                     $0.index += 1
